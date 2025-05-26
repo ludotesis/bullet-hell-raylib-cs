@@ -5,12 +5,12 @@ using System.Numerics;
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
 Rectangle hitboxJugador;
-float velocidadJugador = 300f;
+float velocidadJugador = 500f;
 int escalaJugador = 8;
 bool activoJugador = true;
 // =========== Shuriken ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
-float velocidadShuriken = 400f;
+float velocidadShuriken = 1000f;
 Texture2D spriteShuriken;
 bool activoShuriken = false;
 Rectangle hitboxShuriken;
@@ -65,8 +65,8 @@ while (!Raylib.WindowShouldClose())
         // Mover Jugador hacia abajo en Sincronización delta
         posicionJugador.Y += velocidadJugador * deltaTime;
     }
-    // Si el jugador presiona la tecla F
-    if (Raylib.IsKeyPressed(KeyboardKey.F))
+    // Si el jugador presiona la tecla F y aún no disparó Shuriken
+    if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken)
     {
         //Asignar a la shuriken la posicion de origen en X
         posicionShuriken.X = origenShurikenX;
