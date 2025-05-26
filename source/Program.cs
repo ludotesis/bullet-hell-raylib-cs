@@ -47,6 +47,18 @@ while (!Raylib.WindowShouldClose())
     Raylib.BeginDrawing();
     // Establecer el color de fondo
     Raylib.ClearBackground(Color.Beige);
+    // Si el jugador presiona la tecla W
+    if (Raylib.IsKeyDown(KeyboardKey.W))
+    {
+        // Mover Jugador hacia arriba en Sincronización delta
+        posicionJugador.Y -= velocidadJugador * deltaTime;
+    }
+    // Si el jugador presiona la tecla S
+    if (Raylib.IsKeyDown(KeyboardKey.S))
+    {
+        // Mover Jugador hacia abajo en Sincronización delta
+        posicionJugador.Y += velocidadJugador * deltaTime;
+    }
     // Si el jugador presiona la tecla F
     if (Raylib.IsKeyPressed(KeyboardKey.F))
     {
