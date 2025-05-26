@@ -17,9 +17,10 @@ Rectangle hitboxShuriken;
 int escalaShuriken = 4;
 // =========== Enemigo ===== //
 Vector2 posicionEnemigo ;
-float velocidadEnemigo = 1000f;
+float velocidadEnemigo = 300f;
 Texture2D spriteEnemigo;
 bool activoEnemigo = true;
+bool upEnemigo = true;
 Rectangle hitboxEnemigo;
 int escalaEnemigo = 8;
 // =========== Pared ===== //
@@ -126,9 +127,17 @@ while (!Raylib.WindowShouldClose())
         Raylib.DrawText("GAME OVER", 50, 100, 75, Color.Red);
     }
 
-    // Si el Jugador esta activo
+    // Si el Enemigo esta activo
     if (activoEnemigo)
     {
+         // Si el enemigo se mueve hacia arriba y no supera el limite superior 
+        if (upEnemigo && (posicionEnemigo.Y > limiteUp))
+        {
+            posicionEnemigo.Y -= velocidadEnemigo * deltaTime;
+        }
+        // Actualizar Posición Hitbox segun posicion Enemigo
+        hitboxEnemigo.X = posicionEnemigo.X;
+        hitboxEnemigo.Y = posicionEnemigo.Y;
         // Detectamos colision entre hibtox Shuriken y hibox Enemigo 
         collisionShurikenEnemigo = Raylib.CheckCollisionRecs(hitboxShuriken, hitboxEnemigo);
         // Reiniciar Posicion Shuriken si toca pared
