@@ -6,7 +6,8 @@ Vector2 positionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 400f;
 Texture2D spriteShuriken;
 bool activoShuriken = false;
-Rectangle hitboxShuriken = new Rectangle(positionShuriken.X, positionShuriken.Y, 15, 15);;
+Rectangle hitboxShuriken;
+int escalaShuriken = 4;
 // Inicializar ventana
 Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 //Configurar ventana sin border
@@ -14,8 +15,10 @@ Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
 // =========== Redimensionar Textura ===== //
-spriteShuriken.Width  *= 4;
-spriteShuriken.Height *= 4;
+spriteShuriken.Width  *= escalaShuriken;
+spriteShuriken.Height *= escalaShuriken;
+//=========== Generar Hiboxes ===== //
+hitboxShuriken = new Rectangle(positionShuriken.X, positionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
@@ -50,7 +53,7 @@ while (!Raylib.WindowShouldClose())
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
         Raylib.DrawRectangleRec(hitboxShuriken, Raylib.ColorAlpha(Color.Red, 0.3f));
     }
-  
+
     // Finalizar el dibujo del Canvas 
     Raylib.EndDrawing();
 }
