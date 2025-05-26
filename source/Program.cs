@@ -8,13 +8,20 @@ Rectangle hitboxJugador;
 float velocidadJugador = 500f;
 int escalaJugador = 8;
 bool activoJugador = true;
-// =========== Shuriken ===== //
+// =========== Jugador ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 1000f;
 Texture2D spriteShuriken;
 bool activoShuriken = false;
 Rectangle hitboxShuriken;
 int escalaShuriken = 4;
+// =========== Enemigo ===== //
+Vector2 posicionEnemigo ;
+float velocidadEnemigo = 1000f;
+Texture2D spriteEnemigo;
+bool activoEnemigo = false;
+Rectangle hitboxEnemigo;
+int escalaEnemigo = 4;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
