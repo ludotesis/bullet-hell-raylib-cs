@@ -38,6 +38,7 @@ posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
+hitboxJugador = new Rectangle(posicionJugador.X, posicionJugador.Y, spriteJugador.Width, spriteJugador.Height);
 // Configuracion de limite superior 
 float limiteUp = 0;
 // Calculo de limite inferior segun la altura del jugador
@@ -98,8 +99,13 @@ while (!Raylib.WindowShouldClose())
     // Si el Jugador esta activo
     if (activoJugador)
     {
+        // Actualizar Posición Hitbox segun posicion Jugador
+        hitboxJugador.X = posicionJugador.X;
+        hitboxJugador.Y = posicionJugador.Y;
         // Dibujar Textura en pantalla [textura2D, vector2, color]
         Raylib.DrawTextureV(spriteJugador, posicionJugador, Color.White);
+        // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
+        Raylib.DrawRectangleRec(hitboxJugador, Raylib.ColorAlpha(Color.Blue, 0.3f));
     }
     else
     {
