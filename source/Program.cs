@@ -52,8 +52,10 @@ while (!Raylib.WindowShouldClose())
         // Actualizar Posición Hitbox segun posicion Disparo
         hitboxShuriken.X = posicionShuriken.X;
         hitboxShuriken.Y = posicionShuriken.Y;
-        // Reiniciar Posicion Shuriken si supera limite horizontal
-        if (posicionShuriken.X > Raylib.GetScreenWidth())
+        // Detectamos colision entre hibtox Shuriken y hibox pared luego de moverlo
+        collisionShurikenMapa = Raylib.CheckCollisionRecs(hitboxShuriken, hitboxPared);
+        // Reiniciar Posicion Shuriken si toca pared
+        if (collisionShurikenMapa)
         {
             activoShuriken = false;
             posicionShuriken.X = 100;
