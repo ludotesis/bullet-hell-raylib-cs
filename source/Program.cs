@@ -165,6 +165,11 @@ while (!Raylib.WindowShouldClose())
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
         Raylib.DrawRectangleRec(hitboxEnemigo, Raylib.ColorAlpha(Color.Black, 0.3f));
     }
+    else
+    {
+        // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
+        Raylib.DrawText("VICTORIA", 50, 100, 75, Color.DarkGreen);
+    }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
     // Finalizar el dibujo del Canvas 
