@@ -42,6 +42,8 @@ hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib
 float limiteUp = 0;
 // Calculo de limite inferior segun la altura del jugador
 float limiteDown = Raylib.GetScreenHeight() - spriteJugador.Height;
+// Calculo de origen proyectil segun ancho jugador
+float origenShurikenX = posicionJugador.X + spriteJugador.Width;
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
@@ -66,6 +68,10 @@ while (!Raylib.WindowShouldClose())
     // Si el jugador presiona la tecla F
     if (Raylib.IsKeyPressed(KeyboardKey.F))
     {
+        //Asignar a la shuriken la posicion de origen en X
+        posicionShuriken.X = origenShurikenX;
+        //Calcula de la posicion en Y luego de moverse y segun la altura del personaje
+        posicionShuriken.Y = posicionJugador.Y + (spriteJugador.Height * 0.4f);
         activoShuriken = true;
     }
     // Si el Shuriken esta activo
@@ -82,7 +88,7 @@ while (!Raylib.WindowShouldClose())
         if (collisionShurikenMapa)
         {
             activoShuriken = false;
-            posicionShuriken.X = 100;
+            posicionShuriken.X = origenShurikenX;
         }
         // Dibujar Textura en pantalla [textura2D, vector2, color]
         Raylib.DrawTextureV(spriteShuriken, posicionShuriken, Color.White);
