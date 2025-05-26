@@ -38,6 +38,7 @@ while (!Raylib.WindowShouldClose())
         // Reiniciar Posicion Shuriken si supera limite horizontal
         if (positionShuriken.X > Raylib.GetScreenWidth())
         {
+            activoShuriken = false;
             positionShuriken.X = 100;
         }
         // Dibujar Textura en pantalla [textura2D, vector2, color]
