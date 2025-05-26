@@ -2,6 +2,8 @@
 using Raylib_cs;
 // Inicializar ventana
 Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
+//Configurar ventana sin border
+Raylib.ToggleBorderlessWindowed();
 // Verificar si la aplicación debe cerrarse (se presionó la tecla ESC o se hizo clic en el ícono de cerrar ventana)
 while (!Raylib.WindowShouldClose())
 {
