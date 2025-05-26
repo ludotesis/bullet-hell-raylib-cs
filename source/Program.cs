@@ -50,6 +50,7 @@ posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
 hitboxJugador = new Rectangle(posicionJugador.X, posicionJugador.Y, spriteJugador.Width, spriteJugador.Height);
+hitboxEnemigo = new Rectangle(posicionEnemigo.X, posicionEnemigo.Y, spriteEnemigo.Width, spriteEnemigo.Height);
 // Configuracion de limite superior 
 float limiteUp = 0;
 // Calculo de limite inferior segun la altura del jugador
@@ -126,9 +127,11 @@ while (!Raylib.WindowShouldClose())
 
     // Si el Jugador esta activo
     if (activoEnemigo)
-    { 
+    {
         // Dibujar Textura en pantalla [textura2D, vector2, color]
         Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.White);
+        // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
+        Raylib.DrawRectangleRec(hitboxEnemigo, Raylib.ColorAlpha(Color.Black, 0.3f));
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
