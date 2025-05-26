@@ -6,7 +6,7 @@ Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
 Rectangle hitboxJugador;
 float velocidadJugador = 300f;
-int escalaJugador = 4;
+int escalaJugador = 8;
 bool activoJugador = true;
 // =========== Shuriken ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
@@ -27,9 +27,12 @@ Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
+spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= escalaShuriken;
 spriteShuriken.Height *= escalaShuriken;
+spriteJugador.Width  *= escalaJugador;
+spriteJugador.Height *= escalaJugador;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 //=========== Generar Hiboxes ===== //
@@ -44,8 +47,6 @@ while (!Raylib.WindowShouldClose())
     Raylib.BeginDrawing();
     // Establecer el color de fondo
     Raylib.ClearBackground(Color.Beige);
-    // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
-    Raylib.DrawText("SUSCRIBETE A LUDOTESIS >.<", 50, 100, 75, Color.Brown);
     // Si el jugador presiona la tecla F
     if (Raylib.IsKeyPressed(KeyboardKey.F))
     {
@@ -71,6 +72,17 @@ while (!Raylib.WindowShouldClose())
         Raylib.DrawTextureV(spriteShuriken, posicionShuriken, Color.White);
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
         Raylib.DrawRectangleRec(hitboxShuriken, Raylib.ColorAlpha(Color.Red, 0.3f));
+    }
+    // Si el Jugador esta activo
+    if (activoJugador)
+    {
+        // Dibujar Textura en pantalla [textura2D, vector2, color]
+        Raylib.DrawTextureV(spriteJugador, posicionJugador, Color.White);
+    }
+    else
+    {
+        // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
+        Raylib.DrawText("GAME OVER", 50, 100, 75, Color.Red);
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
