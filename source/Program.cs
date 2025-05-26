@@ -19,9 +19,9 @@ int escalaShuriken = 4;
 Vector2 posicionEnemigo ;
 float velocidadEnemigo = 1000f;
 Texture2D spriteEnemigo;
-bool activoEnemigo = false;
+bool activoEnemigo = true;
 Rectangle hitboxEnemigo;
-int escalaEnemigo = 4;
+int escalaEnemigo = 8;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
@@ -35,13 +35,17 @@ Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
 spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
+spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= escalaShuriken;
 spriteShuriken.Height *= escalaShuriken;
 spriteJugador.Width  *= escalaJugador;
 spriteJugador.Height *= escalaJugador;
+spriteEnemigo.Width  *= escalaEnemigo;
+spriteEnemigo.Height *= escalaEnemigo;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
+posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f) , posicionJugador.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
@@ -118,6 +122,13 @@ while (!Raylib.WindowShouldClose())
     {
         // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
         Raylib.DrawText("GAME OVER", 50, 100, 75, Color.Red);
+    }
+
+    // Si el Jugador esta activo
+    if (activoEnemigo)
+    { 
+        // Dibujar Textura en pantalla [textura2D, vector2, color]
+        Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.White);
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
