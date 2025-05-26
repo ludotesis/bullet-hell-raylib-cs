@@ -1,7 +1,6 @@
 ﻿// Importar Raylib 
 using Raylib_cs;
 using System.Numerics;
-
 // =========== Shuriken ===== //
 Vector2 positionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 400f;
@@ -33,8 +32,7 @@ while (!Raylib.WindowShouldClose())
     {
         positionShuriken.X = 100;
     }
-    // Dibujar circulo en el centro de la pantalla [X, Y, tamaño, color]
-    //Raylib.DrawCircleV(positionShuriken, 50, Color.Red);
+    // Dibujar Textura en pantalla [textura2D, vector2, color]
     Raylib.DrawTextureV(spriteShuriken, positionShuriken, Color.White);
     // Finalizar el dibujo del Canvas 
     Raylib.EndDrawing();
