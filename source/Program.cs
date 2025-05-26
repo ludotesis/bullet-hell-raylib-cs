@@ -20,7 +20,12 @@ while (!Raylib.WindowShouldClose())
     Raylib.DrawText("HOLA MAIN LOOP!", 50, 100,75, Color.Brown);
     // Mover Shuriken horizontalmente
     positionShuriken.X++;
-    // Dibujar circulo en el centro de la pantalla [X, Y, tamaño, color]
+    // Reiniciar Posicion Shuriken si supera limite horizontal
+    if (positionShuriken.X > Raylib.GetScreenWidth())
+    {
+        positionShuriken.X = 100;
+    } 
+        // Dibujar circulo en el centro de la pantalla [X, Y, tamaño, color]
     Raylib.DrawCircleV(positionShuriken, 50, Color.Red);
     // Finalizar el dibujo del Canvas 
     Raylib.EndDrawing();
