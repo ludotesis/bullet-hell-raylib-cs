@@ -7,11 +7,11 @@ Raylib.ToggleBorderlessWindowed();
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
+    // Configurar el Canvas para comenzar a dibujar
+    Raylib.BeginDrawing();
     // Establecer el color de fondo
     Raylib.ClearBackground(Color.Beige);
-    // Configurar el canvas (framebuffer) para comenzar a dibujar
-    Raylib.BeginDrawing();
-    // Dibujar un texto en pantalla [posicionX,posicionY, size, color]
+    // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
     Raylib.DrawText("HOLA MAIN LOOP!", 50, 100,75, Color.Brown);
     // Finalizar el dibujo del Canvas 
     Raylib.EndDrawing();
