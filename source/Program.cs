@@ -8,19 +8,28 @@ Rectangle hitboxJugador;
 float velocidadJugador = 500f;
 int escalaJugador = 8;
 bool activoJugador = true;
-// =========== Shuriken ===== //
+// =========== Jugador ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 1000f;
 Texture2D spriteShuriken;
 bool activoShuriken = false;
 Rectangle hitboxShuriken;
 int escalaShuriken = 4;
+// =========== Enemigo ===== //
+Vector2 posicionEnemigo ;
+float velocidadEnemigo = 300f;
+Texture2D spriteEnemigo;
+bool activoEnemigo = true;
+bool upEnemigo = true;
+Rectangle hitboxEnemigo;
+int escalaEnemigo = 8;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
 int anchoPared = 10;
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
+bool collisionShurikenEnemigo = false;
 // Inicializar ventana
 Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 //Configurar ventana sin border
@@ -28,17 +37,22 @@ Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
 spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
+spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= escalaShuriken;
 spriteShuriken.Height *= escalaShuriken;
 spriteJugador.Width  *= escalaJugador;
 spriteJugador.Height *= escalaJugador;
+spriteEnemigo.Width  *= escalaEnemigo;
+spriteEnemigo.Height *= escalaEnemigo;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
+posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f) , posicionJugador.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
 hitboxJugador = new Rectangle(posicionJugador.X, posicionJugador.Y, spriteJugador.Width, spriteJugador.Height);
+hitboxEnemigo = new Rectangle(posicionEnemigo.X, posicionEnemigo.Y, spriteEnemigo.Width, spriteEnemigo.Height);
 // Configuracion de limite superior 
 float limiteUp = 0;
 // Calculo de limite inferior segun la altura del jugador
@@ -111,6 +125,50 @@ while (!Raylib.WindowShouldClose())
     {
         // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
         Raylib.DrawText("GAME OVER", 50, 100, 75, Color.Red);
+    }
+
+    // Si el Enemigo esta activo
+    if (activoEnemigo)
+    {
+        // Si el enemigo se mueve hacia arriba y no supera el limite superior 
+        if (upEnemigo && (posicionEnemigo.Y > limiteUp))
+        {
+            posicionEnemigo.Y -= velocidadEnemigo * deltaTime;
+        }
+        else
+        {
+            upEnemigo = false;
+        }
+        // Si el enemigo se mueve hacia abajo y no supera el limite inferior
+        if (!upEnemigo && (posicionEnemigo.Y < limiteDown))
+        {
+            posicionEnemigo.Y += velocidadEnemigo * deltaTime;
+        }
+        else
+        {
+            upEnemigo = true;
+        }
+        // Actualizar Posición Hitbox segun posicion Enemigo
+        hitboxEnemigo.X = posicionEnemigo.X;
+        hitboxEnemigo.Y = posicionEnemigo.Y;
+        // Detectamos colision entre hibtox Shuriken y hibox Enemigo 
+        collisionShurikenEnemigo = Raylib.CheckCollisionRecs(hitboxShuriken, hitboxEnemigo);
+        // Reiniciar Posicion Shuriken si toca pared
+        if (collisionShurikenEnemigo)
+        {
+            activoShuriken = false;
+            posicionShuriken.X = origenShurikenX;
+            activoEnemigo = false;
+        }
+        // Dibujar Textura en pantalla [textura2D, vector2, color]
+        Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.White);
+        // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
+        Raylib.DrawRectangleRec(hitboxEnemigo, Raylib.ColorAlpha(Color.Black, 0.3f));
+    }
+    else
+    {
+        // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
+        Raylib.DrawText("VICTORIA", 50, 100, 75, Color.DarkGreen);
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
