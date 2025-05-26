@@ -28,6 +28,7 @@ Rectangle hitboxPared;
 int anchoPared = 10;
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
+bool collisionShurikenEnemigo = false;
 // Inicializar ventana
 Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 //Configurar ventana sin border
@@ -128,6 +129,15 @@ while (!Raylib.WindowShouldClose())
     // Si el Jugador esta activo
     if (activoEnemigo)
     {
+        // Detectamos colision entre hibtox Shuriken y hibox Enemigo 
+        collisionShurikenEnemigo = Raylib.CheckCollisionRecs(hitboxShuriken, hitboxEnemigo);
+        // Reiniciar Posicion Shuriken si toca pared
+        if (collisionShurikenEnemigo)
+        {
+            activoShuriken = false;
+            posicionShuriken.X = origenShurikenX;
+            activoEnemigo = false;
+        }
         // Dibujar Textura en pantalla [textura2D, vector2, color]
         Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.White);
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
