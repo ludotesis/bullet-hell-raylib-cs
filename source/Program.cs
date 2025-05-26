@@ -13,6 +13,8 @@ while (!Raylib.WindowShouldClose())
     Raylib.ClearBackground(Color.Beige);
     // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
     Raylib.DrawText("HOLA MAIN LOOP!", 50, 100,75, Color.Brown);
+    // Dibujar circulo en el centro de la pantalla [X, Y, tamaño, color]
+    Raylib.DrawCircle(Raylib.GetScreenWidth()/2, Raylib.GetScreenHeight()/2, 50, Color.Red);
     // Finalizar el dibujo del Canvas 
     Raylib.EndDrawing();
 }
