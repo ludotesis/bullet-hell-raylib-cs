@@ -38,6 +38,10 @@ posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
+// Configuracion de limite superior 
+float limiteUp = 0;
+// Calculo de limite inferior segun la altura del jugador
+float limiteDown = Raylib.GetScreenHeight() - spriteJugador.Height;
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
@@ -47,14 +51,14 @@ while (!Raylib.WindowShouldClose())
     Raylib.BeginDrawing();
     // Establecer el color de fondo
     Raylib.ClearBackground(Color.Beige);
-    // Si el jugador presiona la tecla W
-    if (Raylib.IsKeyDown(KeyboardKey.W))
+    // Si el jugador presiona la tecla UP y no supera el limite superior
+    if (Raylib.IsKeyDown(KeyboardKey.Up) && (posicionJugador.Y > limiteUp))
     {
         // Mover Jugador hacia arriba en Sincronización delta
         posicionJugador.Y -= velocidadJugador * deltaTime;
     }
-    // Si el jugador presiona la tecla S
-    if (Raylib.IsKeyDown(KeyboardKey.S))
+    // Si el jugador presiona la tecla Down y no supera el limite inferior
+    if (Raylib.IsKeyDown(KeyboardKey.Down) && (posicionJugador.Y < limiteDown))
     {
         // Mover Jugador hacia abajo en Sincronización delta
         posicionJugador.Y += velocidadJugador * deltaTime;
