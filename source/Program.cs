@@ -2,6 +2,13 @@
 using Raylib_cs;
 using System.Numerics;
 // =========== Shuriken ===== //
+Vector2 posicionJugador = new Vector2(50, 400);
+Texture2D spriteJugador;
+Rectangle hitboxJugador;
+float velocidadJugador = 300f;
+int escalaJugador = 4;
+bool activoJugador = true;
+// =========== Shuriken ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 400f;
 Texture2D spriteShuriken;
