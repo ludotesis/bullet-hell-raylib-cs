@@ -130,10 +130,23 @@ while (!Raylib.WindowShouldClose())
     // Si el Enemigo esta activo
     if (activoEnemigo)
     {
-         // Si el enemigo se mueve hacia arriba y no supera el limite superior 
+        // Si el enemigo se mueve hacia arriba y no supera el limite superior 
         if (upEnemigo && (posicionEnemigo.Y > limiteUp))
         {
             posicionEnemigo.Y -= velocidadEnemigo * deltaTime;
+        }
+        else
+        {
+            upEnemigo = false;
+        }
+        // Si el enemigo se mueve hacia abajo y no supera el limite inferior
+        if (!upEnemigo && (posicionEnemigo.Y < limiteDown))
+        {
+            posicionEnemigo.Y += velocidadEnemigo * deltaTime;
+        }
+        else
+        {
+            upEnemigo = true;
         }
         // Actualizar Posición Hitbox segun posicion Enemigo
         hitboxEnemigo.X = posicionEnemigo.X;
