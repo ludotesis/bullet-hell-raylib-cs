@@ -12,6 +12,9 @@ Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
+// =========== Redimensionar Textura ===== //
+spriteShuriken.Width  *= 4;
+spriteShuriken.Height *= 4;
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
