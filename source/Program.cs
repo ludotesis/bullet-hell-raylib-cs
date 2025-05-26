@@ -23,6 +23,11 @@ bool activoEnemigo = true;
 bool upEnemigo = true;
 Rectangle hitboxEnemigo;
 int escalaEnemigo = 8;
+// =========== Enemigo Disparo ===== //
+Vector2 posicionDisparo ;
+float velocidadDisparo = 300f;
+bool activoDisparo = true;
+float radioDisparo = 5f;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
@@ -47,7 +52,7 @@ spriteEnemigo.Width  *= escalaEnemigo;
 spriteEnemigo.Height *= escalaEnemigo;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
-posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f) , posicionJugador.Y);
+posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
@@ -59,6 +64,8 @@ float limiteUp = 0;
 float limiteDown = Raylib.GetScreenHeight() - spriteJugador.Height;
 // Calculo de origen proyectil segun ancho jugador
 float origenShurikenX = posicionJugador.X + spriteJugador.Width;
+// Calculo de origen proyectil segun ancho enemigo
+float origenDisparoX =  posicionEnemigo.X - spriteEnemigo.Width;
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
