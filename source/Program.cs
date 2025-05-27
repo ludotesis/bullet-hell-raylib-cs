@@ -24,10 +24,10 @@ bool upEnemigo = true;
 Rectangle hitboxEnemigo;
 int escalaEnemigo = 8;
 // =========== Enemigo Disparo ===== //
-Vector2 posicionDisparo ;
-float velocidadDisparo = 300f;
+Vector2 posicionDisparo;
+float velocidadDisparo = 400f;
 bool activoDisparo = true;
-float radioDisparo = 5f;
+float radioDisparo = 18f;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
@@ -53,6 +53,7 @@ spriteEnemigo.Height *= escalaEnemigo;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
+posicionDisparo = new Vector2(posicionEnemigo.X, Raylib.GetScreenHeight() /2 );
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
@@ -64,8 +65,6 @@ float limiteUp = 0;
 float limiteDown = Raylib.GetScreenHeight() - spriteJugador.Height;
 // Calculo de origen proyectil segun ancho jugador
 float origenShurikenX = posicionJugador.X + spriteJugador.Width;
-// Calculo de origen proyectil segun ancho enemigo
-float origenDisparoX =  posicionEnemigo.X - spriteEnemigo.Width;
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
@@ -176,6 +175,17 @@ while (!Raylib.WindowShouldClose())
     {
         // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
         Raylib.DrawText("VICTORIA", 50, 100, 75, Color.DarkGreen);
+    }
+    // Si el Disparo esta activo
+    if (activoDisparo && (posicionDisparo.X > 0))
+    {
+        // Mover Disparo horizontalmente en Sincronización delta
+        posicionDisparo.X -= velocidadDisparo * deltaTime;
+        Raylib.DrawCircleV(posicionDisparo, radioDisparo, Color.Black);
+    }
+    else
+    {
+        posicionDisparo.X = posicionEnemigo.X;
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
