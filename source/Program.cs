@@ -1,14 +1,14 @@
 ﻿// Importar Raylib 
 using Raylib_cs;
 using System.Numerics;
-// =========== Shuriken ===== //
+// =========== Jugado ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
 Rectangle hitboxJugador;
 float velocidadJugador = 500f;
 int escalaJugador = 8;
 bool activoJugador = true;
-// =========== Jugador ===== //
+// =========== Shuriken ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 1000f;
 Texture2D spriteShuriken;
@@ -25,9 +25,11 @@ Rectangle hitboxEnemigo;
 int escalaEnemigo = 8;
 // =========== Enemigo Disparo ===== //
 Vector2 posicionDisparo;
-float velocidadDisparo = 400f;
+float velocidadDisparo = 500f;
 bool activoDisparo = true;
 float radioDisparo = 18f;
+float refrescoDisparo = 4f;
+float tiempoEsperaDisparo = 0;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
@@ -54,7 +56,7 @@ spriteEnemigo.Height *= escalaEnemigo;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
-posicionDisparo = new Vector2(posicionEnemigo.X, Raylib.GetScreenHeight() /2 );
+posicionDisparo = new Vector2(posicionEnemigo.X, posicionEnemigo.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
@@ -71,6 +73,8 @@ while (!Raylib.WindowShouldClose())
 {
     // Obtener el tiempo en segundos para el último fotograma dibujado (tiempo delta)
     float deltaTime = Raylib.GetFrameTime();
+    // Sumamos tiempo trascurrido al disparo
+    tiempoEsperaDisparo += deltaTime;
     // Configurar el Canvas para comenzar a dibujar
     Raylib.BeginDrawing();
     // Establecer el color de fondo
@@ -177,8 +181,18 @@ while (!Raylib.WindowShouldClose())
         // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
         Raylib.DrawText("VICTORIA", 50, 100, 75, Color.DarkGreen);
     }
+    // Si tiempo espera disparo es mayo o igual que el refresco de disparo
+    if (tiempoEsperaDisparo >= refrescoDisparo)
+    {
+        // Configuro el disparo como activado
+        activoDisparo = true;
+        // Reinicio el tiempo de espera para el siguiente disparo
+        tiempoEsperaDisparo = 0;
+        // Posicion Disparo en Y segun Posicion Enemigo
+        posicionDisparo.Y = posicionEnemigo.Y + (spriteEnemigo.Height * 0.4f);
+    }
     // Si el Disparo esta activo
-    if (activoDisparo && (posicionDisparo.X > 0))
+    if (activoDisparo)
     {
         // Mover Disparo horizontalmente en Sincronización delta
         posicionDisparo.X -= velocidadDisparo * deltaTime;
@@ -189,11 +203,14 @@ while (!Raylib.WindowShouldClose())
         {
             activoJugador = false;
             activoDisparo = false;
+            tiempoEsperaDisparo = 0;
         }
         Raylib.DrawCircleV(posicionDisparo, radioDisparo, Color.Black);
     }
-    else
+     // Si el Disparo supera limite izquierdo
+    if(posicionDisparo.X < 0)
     {
+        activoDisparo = false;
         posicionDisparo.X = posicionEnemigo.X;
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
