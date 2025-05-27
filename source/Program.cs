@@ -1,14 +1,14 @@
 ﻿// Importar Raylib 
 using Raylib_cs;
 using System.Numerics;
-// =========== Shuriken ===== //
+// =========== Jugado ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
 Rectangle hitboxJugador;
 float velocidadJugador = 500f;
 int escalaJugador = 8;
 bool activoJugador = true;
-// =========== Jugador ===== //
+// =========== Shuriken ===== //
 Vector2 posicionShuriken = new Vector2(100, 400);
 float velocidadShuriken = 1000f;
 Texture2D spriteShuriken;
@@ -23,6 +23,13 @@ bool activoEnemigo = true;
 bool upEnemigo = true;
 Rectangle hitboxEnemigo;
 int escalaEnemigo = 8;
+// =========== Enemigo Disparo ===== //
+Vector2 posicionDisparo;
+float velocidadDisparo = 700f;
+bool activoDisparo = true;
+float radioDisparo = 18f;
+float refrescoDisparo = 3f;
+float tiempoEsperaDisparo = 0;
 // =========== Pared ===== //
 Vector2 posicionPared;
 Rectangle hitboxPared;
@@ -30,6 +37,7 @@ int anchoPared = 10;
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
 bool collisionShurikenEnemigo = false;
+bool collisionDisparoJugador = false;
 // Inicializar ventana
 Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 //Configurar ventana sin border
@@ -47,7 +55,8 @@ spriteEnemigo.Width  *= escalaEnemigo;
 spriteEnemigo.Height *= escalaEnemigo;
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
-posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f) , posicionJugador.Y);
+posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
+posicionDisparo = new Vector2(posicionEnemigo.X, posicionEnemigo.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
@@ -64,6 +73,8 @@ while (!Raylib.WindowShouldClose())
 {
     // Obtener el tiempo en segundos para el último fotograma dibujado (tiempo delta)
     float deltaTime = Raylib.GetFrameTime();
+    // Sumamos tiempo trascurrido al disparo
+    tiempoEsperaDisparo += deltaTime;
     // Configurar el Canvas para comenzar a dibujar
     Raylib.BeginDrawing();
     // Establecer el color de fondo
@@ -81,7 +92,7 @@ while (!Raylib.WindowShouldClose())
         posicionJugador.Y += velocidadJugador * deltaTime;
     }
     // Si el jugador presiona la tecla F y aún no disparó Shuriken
-    if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken)
+    if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken && activoJugador)
     {
         //Asignar a la shuriken la posicion de origen en X
         posicionShuriken.X = origenShurikenX;
@@ -169,6 +180,40 @@ while (!Raylib.WindowShouldClose())
     {
         // Dibujar un texto en pantalla [posicion en X,posicion en Y, tamaño, color]
         Raylib.DrawText("VICTORIA", 50, 100, 75, Color.DarkGreen);
+    }
+    // Si tiempo espera disparo es mayo o igual que el refresco de disparo
+    if ((tiempoEsperaDisparo >= refrescoDisparo) && activoEnemigo)
+    {
+        // Configuro el disparo como activado
+        activoDisparo = true;
+        // Reinicio el tiempo de espera para el siguiente disparo
+        tiempoEsperaDisparo = 0;
+        // Posicion Disparo en X segun Posicion Enemigo
+        posicionDisparo.X = posicionEnemigo.X;
+        // Posicion Disparo en Y segun Posicion Enemigo
+        posicionDisparo.Y = posicionEnemigo.Y + (spriteEnemigo.Height * 0.4f);
+    }
+    // Si el Disparo esta activo
+    if (activoDisparo)
+    {
+        // Mover Disparo horizontalmente en Sincronización delta
+        posicionDisparo.X -= velocidadDisparo * deltaTime;
+        // Detectamos colision entre hibtox Disparo y hibox Jugador
+        collisionDisparoJugador = Raylib.CheckCollisionCircleRec(posicionDisparo, radioDisparo, hitboxJugador);
+        // Si colision Disparo Jugador
+        if (collisionDisparoJugador)
+        {
+            activoJugador = false;
+            activoDisparo = false;
+            tiempoEsperaDisparo = 0;
+        }
+        Raylib.DrawCircleV(posicionDisparo, radioDisparo, Color.Black);
+    }
+     // Si el Disparo supera limite izquierdo
+    if(posicionDisparo.X < 0)
+    {
+        activoDisparo = false;
+        posicionDisparo.X = posicionEnemigo.X;
     }
     // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
