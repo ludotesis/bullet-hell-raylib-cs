@@ -35,6 +35,7 @@ int anchoPared = 10;
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
 bool collisionShurikenEnemigo = false;
+bool collisionDisparoJugador = false;
 // Inicializar ventana
 Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
 //Configurar ventana sin border
@@ -181,6 +182,14 @@ while (!Raylib.WindowShouldClose())
     {
         // Mover Disparo horizontalmente en Sincronización delta
         posicionDisparo.X -= velocidadDisparo * deltaTime;
+        // Detectamos colision entre hibtox Disparo y hibox Jugador
+        collisionDisparoJugador = Raylib.CheckCollisionCircleRec(posicionDisparo, radioDisparo, hitboxJugador);
+        // Si colision Disparo Jugador
+        if (collisionDisparoJugador)
+        {
+            activoJugador = false;
+            activoDisparo = false;
+        }
         Raylib.DrawCircleV(posicionDisparo, radioDisparo, Color.Black);
     }
     else
