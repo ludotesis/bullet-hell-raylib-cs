@@ -25,10 +25,10 @@ Rectangle hitboxEnemigo;
 int escalaEnemigo = 8;
 // =========== Enemigo Disparo ===== //
 Vector2 posicionDisparo;
-float velocidadDisparo = 500f;
+float velocidadDisparo = 700f;
 bool activoDisparo = true;
 float radioDisparo = 18f;
-float refrescoDisparo = 4f;
+float refrescoDisparo = 3f;
 float tiempoEsperaDisparo = 0;
 // =========== Pared ===== //
 Vector2 posicionPared;
@@ -92,7 +92,7 @@ while (!Raylib.WindowShouldClose())
         posicionJugador.Y += velocidadJugador * deltaTime;
     }
     // Si el jugador presiona la tecla F y aún no disparó Shuriken
-    if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken)
+    if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken && activoJugador)
     {
         //Asignar a la shuriken la posicion de origen en X
         posicionShuriken.X = origenShurikenX;
@@ -182,12 +182,14 @@ while (!Raylib.WindowShouldClose())
         Raylib.DrawText("VICTORIA", 50, 100, 75, Color.DarkGreen);
     }
     // Si tiempo espera disparo es mayo o igual que el refresco de disparo
-    if (tiempoEsperaDisparo >= refrescoDisparo)
+    if ((tiempoEsperaDisparo >= refrescoDisparo) && activoEnemigo)
     {
         // Configuro el disparo como activado
         activoDisparo = true;
         // Reinicio el tiempo de espera para el siguiente disparo
         tiempoEsperaDisparo = 0;
+        // Posicion Disparo en X segun Posicion Enemigo
+        posicionDisparo.X = posicionEnemigo.X;
         // Posicion Disparo en Y segun Posicion Enemigo
         posicionDisparo.Y = posicionEnemigo.Y + (spriteEnemigo.Height * 0.4f);
     }
