@@ -4,9 +4,11 @@ using System.Numerics;
 // =========== Constantes ===== //
 const int MAX_FRAME_SPEED = 15;
 const int MIN_FRAME_SPEED = 1;
+const int FRAME_SPEED = 8;
 const int FRAME_TARGET = 60;
 const int SCREEN_WIDTH = 320;
 const int SCREEN_HEIGHT = 180;
+const int SCALE_ACTOR = 8;
 // =========== Jugado ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
@@ -25,9 +27,12 @@ int escalaShuriken = 4;
 Vector2 posicionEnemigo ;
 float velocidadEnemigo = 300f;
 Texture2D spriteEnemigo;
+Texture2D enemigoAnimIdle;
 bool activoEnemigo = true;
 bool upEnemigo = true;
 Rectangle hitboxEnemigo;
+Rectangle frameRectAnim;
+int contradorFrameAnim = 0;
 int escalaEnemigo = 8;
 // =========== Enemigo Disparo ===== //
 Vector2 posicionDisparo;
@@ -48,10 +53,14 @@ bool collisionDisparoJugador = false;
 Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
 //Configurar ventana sin border
 Raylib.ToggleBorderlessWindowed();
+//Configurar FPS objetivo
+Raylib.SetTargetFPS(FRAME_TARGET);
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
 spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
 spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
+enemigoAnimIdle = Raylib.LoadTexture("sprites/Enemigo/Idle.png");
+frameRectAnim = new Rectangle(0f, 0f, (float)enemigoAnimIdle.Width / 4, (float)enemigoAnimIdle.Height);
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= escalaShuriken;
 spriteShuriken.Height *= escalaShuriken;
