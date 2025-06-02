@@ -2,12 +2,9 @@
 using Raylib_cs;
 using System.Numerics;
 // =========== Constantes ===== //
-const int MAX_FRAME_SPEED = 15;
-const int MIN_FRAME_SPEED = 1;
 const int FRAME_TARGET = 60;
 const int SCREEN_WIDTH = 320;
 const int SCREEN_HEIGHT = 180;
-const int SCALE_ACTOR = 8;
 // =========== Jugado ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
@@ -26,14 +23,18 @@ int escalaShuriken = 4;
 Vector2 posicionEnemigo ;
 float velocidadEnemigo = 300f;
 Texture2D spriteEnemigo;
-Texture2D enemigoAnimIdle;
 bool activoEnemigo = true;
 bool upEnemigo = true;
 Rectangle hitboxEnemigo;
-Rectangle frameRectAnim;
-int contradorFrameAnim = 0;
-int frameActualAnim = 0;
 int escalaEnemigo = 8;
+// =========== Animacion Enemigo Reposo ===== //
+float duracionAnimacion = 1.0f;
+float velocidadAnimacion = 6f;
+int cantidadFrames = 4;
+float tiempoActualAnimacion = 0;
+int frameActualAnimacion = 0;
+Texture2D enemigoAnimamacionReposo;
+Rectangle RectanguloAnimacion;
 // =========== Enemigo Disparo ===== //
 Vector2 posicionDisparo;
 float velocidadDisparo = 700f;
@@ -59,8 +60,7 @@ Raylib.SetTargetFPS(FRAME_TARGET);
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
 spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
 spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
-enemigoAnimIdle = Raylib.LoadTexture("sprites/Enemigo/Idle.png");
-
+enemigoAnimamacionReposo = Raylib.LoadTexture("sprites/Enemigo/Idle.png");
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= escalaShuriken;
 spriteShuriken.Height *= escalaShuriken;
@@ -69,9 +69,13 @@ spriteJugador.Height *= escalaJugador;
 spriteEnemigo.Width  *= escalaEnemigo;
 spriteEnemigo.Height *= escalaEnemigo;
 
-enemigoAnimIdle.Width *= escalaEnemigo;
-enemigoAnimIdle.Height *= escalaEnemigo;
-frameRectAnim = new Rectangle(0f, 0f, (float)enemigoAnimIdle.Width / 4, (float)enemigoAnimIdle.Height);
+enemigoAnimamacionReposo.Width *= escalaEnemigo;
+enemigoAnimamacionReposo.Height *= escalaEnemigo;
+RectanguloAnimacion = new Rectangle(
+                        0f,
+                        0f,
+                        (float)enemigoAnimamacionReposo.Width / cantidadFrames,
+                        (float)enemigoAnimamacionReposo.Height);
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
@@ -88,33 +92,31 @@ float limiteDown = Raylib.GetScreenHeight() - spriteJugador.Height;
 // Calculo de origen proyectil segun ancho jugador
 float origenShurikenX = posicionJugador.X + spriteJugador.Width;
 // Hasta que la aplicacion no se cierre
-
-int framesSpeed = 8;
 while (!Raylib.WindowShouldClose())
 {
     // Obtener el tiempo en segundos para el último fotograma dibujado (tiempo delta)
     float deltaTime = Raylib.GetFrameTime();
     // Sumamos tiempo trascurrido al disparo
     tiempoEsperaDisparo += deltaTime;
-    // Configurar el Canvas para comenzar a dibujar
-    // ==== COMPUTAR ====== //
-    //Incrementamos el frame actual de la animacion
-    contradorFrameAnim++;
-    //Verificamos la relacion entre el frame y la velocidad de renderezaidos
-    if (contradorFrameAnim >= (FRAME_TARGET / framesSpeed))
-    {
-        contradorFrameAnim = 0;
-        frameActualAnim++;
-
-        if (frameActualAnim > 3)
+    // Se acumula tiempo para determinar cuando cambiar el frame
+    tiempoActualAnimacion += deltaTime;
+    // Si hay que cambiar de cuandro de animacion (segun duracion y velocidad)
+    if (tiempoActualAnimacion >= duracionAnimacion / velocidadAnimacion) {
+        //Reiniciar el conteo para el siguiente cuadro
+        tiempoActualAnimacion = 0f;
+        //Incrementar el INDICE del frame
+        frameActualAnimacion++;
+        //Si se supera el último frame
+        if (frameActualAnimacion >= cantidadFrames)
         {
-            frameActualAnim = 0;
-        }
-
-        frameRectAnim.X = (float)frameActualAnim * (float)enemigoAnimIdle.Width / 4;
+            //Reiniciar la animacion
+            frameActualAnimacion = 0;
+        } 
+        //Posicionar el rectángulo en el siguiente cuadro
+        RectanguloAnimacion.X = frameActualAnimacion * RectanguloAnimacion.Width;
     }
 
-    framesSpeed = Math.Clamp(framesSpeed, MIN_FRAME_SPEED, MAX_FRAME_SPEED);
+    
     // ==== DIBUJAR ====== //
     Raylib.BeginDrawing();
     // Establecer el color de fondo
@@ -214,8 +216,7 @@ while (!Raylib.WindowShouldClose())
         // Dibujar Textura en pantalla [textura2D, vector2, color]
         //Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.White);
         // Draw part of the texture
-
-        Raylib.DrawTextureRec(enemigoAnimIdle, frameRectAnim, posicionEnemigo, Color.White);
+        Raylib.DrawTextureRec(enemigoAnimamacionReposo, RectanguloAnimacion, posicionEnemigo, Color.White);
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
         Raylib.DrawRectangleRec(hitboxEnemigo, Raylib.ColorAlpha(Color.Black, 0.3f));
     }
