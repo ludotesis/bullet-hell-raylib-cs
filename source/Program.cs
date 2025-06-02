@@ -57,10 +57,7 @@ Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
 //Configurar ventana sin border
 Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
-spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
-spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
-spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
-enemigoAnimamacionReposo = Raylib.LoadTexture("sprites/Enemigo/Idle.png");
+CargarTexturas();
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= escalaShuriken;
 spriteShuriken.Height *= escalaShuriken;
@@ -267,3 +264,13 @@ while (!Raylib.WindowShouldClose())
 #endregion
 // Cerrar ventana
 Raylib.CloseWindow();
+
+void CargarTexturas()
+{
+    spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
+    spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
+    spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
+    enemigoAnimamacionReposo = Raylib.LoadTexture("sprites/Enemigo/Idle.png");
+}
+
+
