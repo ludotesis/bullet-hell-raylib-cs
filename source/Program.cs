@@ -2,10 +2,9 @@
 using Raylib_cs;
 using System.Numerics;
 // =========== Constantes ===== //
-const int FRAME_TARGET = 60;
 const int SCREEN_WIDTH = 320;
 const int SCREEN_HEIGHT = 180;
-// =========== Jugado ===== //
+// =========== Jugador ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
 Rectangle hitboxJugador;
@@ -54,8 +53,6 @@ bool collisionDisparoJugador = false;
 Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
 //Configurar ventana sin border
 Raylib.ToggleBorderlessWindowed();
-//Configurar FPS objetivo
-Raylib.SetTargetFPS(FRAME_TARGET);
 // =========== Cargar Texturas ===== //
 spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
 spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
@@ -68,14 +65,15 @@ spriteJugador.Width  *= escalaJugador;
 spriteJugador.Height *= escalaJugador;
 spriteEnemigo.Width  *= escalaEnemigo;
 spriteEnemigo.Height *= escalaEnemigo;
-
+//Escalar Spritesheet
 enemigoAnimamacionReposo.Width *= escalaEnemigo;
 enemigoAnimamacionReposo.Height *= escalaEnemigo;
+//Definir rectángulo segun escala de spritesheet
 RectanguloAnimacion = new Rectangle(
                         0f,
                         0f,
-                        (float)enemigoAnimamacionReposo.Width / cantidadFrames,
-                        (float)enemigoAnimamacionReposo.Height);
+                      enemigoAnimamacionReposo.Width / cantidadFrames,
+                      enemigoAnimamacionReposo.Height);
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
 posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
@@ -115,12 +113,11 @@ while (!Raylib.WindowShouldClose())
         //Posicionar el rectángulo en el siguiente cuadro
         RectanguloAnimacion.X = frameActualAnimacion * RectanguloAnimacion.Width;
     }
-
-    
-    // ==== DIBUJAR ====== //
     Raylib.BeginDrawing();
     // Establecer el color de fondo
     Raylib.ClearBackground(Color.Beige);
+    // Establecer mensaje para ver frame actual del enemigo
+    Raylib.DrawText("FRAME ENEMIGO "+ frameActualAnimacion.ToString(), 10, 1000, 30, Color.DarkBrown);
     // Si el jugador presiona la tecla UP y no supera el limite superior
     if (Raylib.IsKeyDown(KeyboardKey.Up) && (posicionJugador.Y > limiteUp))
     {
@@ -213,9 +210,7 @@ while (!Raylib.WindowShouldClose())
             posicionShuriken.X = origenShurikenX;
             activoEnemigo = false;
         }
-        // Dibujar Textura en pantalla [textura2D, vector2, color]
-        //Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.White);
-        // Draw part of the texture
+        // Dibujar una porción de la textura usando un rectángulo
         Raylib.DrawTextureRec(enemigoAnimamacionReposo, RectanguloAnimacion, posicionEnemigo, Color.White);
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
         Raylib.DrawRectangleRec(hitboxEnemigo, Raylib.ColorAlpha(Color.Black, 0.3f));
