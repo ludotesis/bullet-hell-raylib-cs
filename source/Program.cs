@@ -1,6 +1,12 @@
 ﻿// Importar Raylib 
 using Raylib_cs;
 using System.Numerics;
+// =========== Constantes ===== //
+const int MAX_FRAME_SPEED = 15;
+const int MIN_FRAME_SPEED = 1;
+const int FRAME_TARGET = 60;
+const int SCREEN_WIDTH = 320;
+const int SCREEN_HEIGHT = 180;
 // =========== Jugado ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
@@ -39,7 +45,7 @@ bool collisionShurikenMapa = false;
 bool collisionShurikenEnemigo = false;
 bool collisionDisparoJugador = false;
 // Inicializar ventana
-Raylib.InitWindow(320, 180, "Bullet Hell con Raylib");
+Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
 //Configurar ventana sin border
 Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
