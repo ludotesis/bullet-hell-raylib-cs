@@ -4,6 +4,7 @@ using System.Numerics;
 // =========== Constantes ===== //
 const int SCREEN_WIDTH = 320;
 const int SCREEN_HEIGHT = 180;
+#region ==== PROPIEDADES ====
 // =========== Jugador ===== //
 Vector2 posicionJugador = new Vector2(50, 400);
 Texture2D spriteJugador;
@@ -49,6 +50,8 @@ int anchoPared = 10;
 bool collisionShurikenMapa = false;
 bool collisionShurikenEnemigo = false;
 bool collisionDisparoJugador = false;
+#endregion 
+#region ==== INICIALIZAR JUEGO ====
 // Inicializar ventana
 Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
 //Configurar ventana sin border
@@ -89,6 +92,8 @@ float limiteUp = 0;
 float limiteDown = Raylib.GetScreenHeight() - spriteJugador.Height;
 // Calculo de origen proyectil segun ancho jugador
 float origenShurikenX = posicionJugador.X + spriteJugador.Width;
+#endregion
+#region ==== MAIN LOOP ====
 // Hasta que la aplicacion no se cierre
 while (!Raylib.WindowShouldClose())
 {
@@ -109,7 +114,7 @@ while (!Raylib.WindowShouldClose())
         {
             //Reiniciar la animacion
             frameActualAnimacion = 0;
-        } 
+        }
         //Posicionar el rectángulo en el siguiente cuadro
         RectanguloAnimacion.X = frameActualAnimacion * RectanguloAnimacion.Width;
     }
@@ -117,7 +122,7 @@ while (!Raylib.WindowShouldClose())
     // Establecer el color de fondo
     Raylib.ClearBackground(Color.Beige);
     // Establecer mensaje para ver frame actual del enemigo
-    Raylib.DrawText("FRAME ENEMIGO "+ frameActualAnimacion.ToString(), 10, 1000, 30, Color.DarkBrown);
+    Raylib.DrawText("FRAME ENEMIGO " + frameActualAnimacion.ToString(), 10, 1000, 30, Color.DarkBrown);
     // Si el jugador presiona la tecla UP y no supera el limite superior
     if (Raylib.IsKeyDown(KeyboardKey.Up) && (posicionJugador.Y > limiteUp))
     {
@@ -259,5 +264,6 @@ while (!Raylib.WindowShouldClose())
     // Finalizar el dibujo del Canvas 
     Raylib.EndDrawing();
 }
+#endregion
 // Cerrar ventana
 Raylib.CloseWindow();
