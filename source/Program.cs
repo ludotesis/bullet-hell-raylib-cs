@@ -95,6 +95,12 @@ float origenShurikenX = posicionJugador.X + spriteJugador.Width;
 float tiempoEntreFrame = duracionAnimacion / velocidadAnimacion;
 int columnaAnimacionY = 2;
 #endregion
+#region ==== AUDIO ====
+Raylib.InitAudioDevice();
+musicaFondo = Raylib.LoadMusicStream("sonidos/Dungeon.ogg");
+sonidoColision = Raylib.LoadSound("sonidos/Hit.ogg");
+sonidoDisparo = Raylib.LoadSound("sonidos/Shoot.ogg");
+#endregion
 #region ==== GAME LOOP ====
 while (!Raylib.WindowShouldClose())
 {
