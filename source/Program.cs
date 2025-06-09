@@ -61,7 +61,7 @@ Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
 //Configurar ventana sin border
 //Raylib.ToggleBorderlessWindowed();
 // =========== Cargar Texturas ===== //
-CargaTexturas();
+CargarTexturas();
 // =========== Redimensionar Texturas ===== //
 spriteShuriken.Width  *= ESCALA_ITEMS;
 spriteShuriken.Height *= ESCALA_ITEMS;
@@ -125,9 +125,7 @@ while (!Raylib.WindowShouldClose())
         //Posicionar el rectángulo en el siguiente cuadro
         RectanguloAnimacion.Y = frameActualAnimacion * RectanguloAnimacion.Height;
     }
-    Raylib.BeginDrawing();
-    // Establecer el color de fondo
-    Raylib.ClearBackground(Color.Beige);
+   
     // Establecer mensaje para ver frame actual del enemigo
     Raylib.DrawText("FRAME ENEMIGO " + frameActualAnimacion.ToString(), 10, 1000, 30, Color.DarkBrown);
     // Si el jugador presiona la tecla UP y no supera el limite superior
@@ -139,8 +137,7 @@ while (!Raylib.WindowShouldClose())
         // Mover Shuriken horizontalmente en Sincronización delta
         posicionShuriken.X += velocidadShuriken * deltaTime;
         // Actualizar Posición Hitbox segun posicion Disparo
-        hitboxShuriken.X = posicionShuriken.X;
-        hitboxShuriken.Y = posicionShuriken.Y;
+       
         // Detectamos colision entre hibtox Shuriken y hibox pared luego de moverlo
         collisionShurikenMapa = Raylib.CheckCollisionRecs(hitboxShuriken, hitboxPared);
         // Reiniciar Posicion Shuriken si toca pared
@@ -150,18 +147,16 @@ while (!Raylib.WindowShouldClose())
             posicionShuriken.X = origenShurikenX;
         }
         // Dibujar Textura en pantalla [textura2D, vector2, color]
-        Raylib.DrawTextureV(spriteShuriken, posicionShuriken, Color.White);
+
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
 
     }
     // Si el Jugador esta activo
     if (activoJugador)
     {
-        // Actualizar Posición Hitbox segun posicion Jugador
-        hitboxJugador.X = posicionJugador.X;
-        hitboxJugador.Y = posicionJugador.Y;
+        
         // Dibujar Textura en pantalla [textura2D, vector2, color]
-        Raylib.DrawTextureV(spriteJugador, posicionJugador, Color.White);
+     
         // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
 
     }
@@ -193,8 +188,7 @@ while (!Raylib.WindowShouldClose())
             upEnemigo = true;
         }
         // Actualizar Posición Hitbox segun posicion Enemigo
-        hitboxEnemigo.X = posicionEnemigo.X;
-        hitboxEnemigo.Y = posicionEnemigo.Y;
+       
         // Detectamos colision entre hibtox Shuriken y hibox Enemigo 
         collisionShurikenEnemigo = Raylib.CheckCollisionRecs(hitboxShuriken, hitboxEnemigo);
         // Reiniciar Posicion Shuriken si toca pared
@@ -206,7 +200,7 @@ while (!Raylib.WindowShouldClose())
         }
         // Dibujar una porción de la textura usando un rectángulo
         //Raylib.DrawTextureV(spriteEnemigo, posicionEnemigo, Color.DarkBlue);
-        Raylib.DrawTextureRec(enemigoAnimamacionReposo, RectanguloAnimacion, posicionEnemigo, Color.Red);
+        
     
     }
     else
@@ -242,7 +236,7 @@ while (!Raylib.WindowShouldClose())
             activoDisparo = false;
             tiempoEsperaDisparo = 0;
         }
-        Raylib.DrawCircleV(posicionDisparo, radioDisparo, Color.Black);
+       
     }
     // Si el Disparo supera limite izquierdo
     if (posicionDisparo.X < 0)
@@ -250,8 +244,14 @@ while (!Raylib.WindowShouldClose())
         activoDisparo = false;
         posicionDisparo.X = posicionEnemigo.X;
     }
-
-    GestionDebugMode();
+    //========= INTERACTUAR =========
+    //========= PROCESAR =========
+    ActualizarHitboxes();
+    //========= DIBUJAR =========
+    Raylib.BeginDrawing();
+        Raylib.ClearBackground(Color.Beige);
+        DibujarObjetos();
+        GestionarDebugMode();
     Raylib.EndDrawing();
 }
 // Cerrar ventana
@@ -294,13 +294,32 @@ void DispararShuriken()
 }
 void MoverShuriken()
 {
-
+    
+   
 }
-void ActulizarHitboxes()
+void ActualizarHitboxes()
+{
+    hitboxJugador.X = posicionJugador.X;
+    hitboxJugador.Y = posicionJugador.Y;
+    hitboxShuriken.X = posicionShuriken.X;
+    hitboxShuriken.Y = posicionShuriken.Y;
+    hitboxEnemigo.X = posicionEnemigo.X;
+    hitboxEnemigo.Y = posicionEnemigo.Y;
+}
+
+void DetectarColisiones()
 {
     
 }
-void CargaTexturas()
+
+void DibujarObjetos()
+{
+    if (activoJugador)  Raylib.DrawTextureV(spriteJugador, posicionJugador, Color.White);
+    if (activoEnemigo)  Raylib.DrawTextureRec(enemigoAnimamacionReposo, RectanguloAnimacion, posicionEnemigo, Color.Red);
+    if (activoShuriken) Raylib.DrawTextureV(spriteShuriken, posicionShuriken, Color.White);
+    if (activoDisparo)  Raylib.DrawCircleV(posicionDisparo, radioDisparo, Color.Black);
+}
+void CargarTexturas()
 {
     spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
     spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
@@ -309,14 +328,12 @@ void CargaTexturas()
 }
 void DibujarHitboxs()
 {
-    // Dibujar Pantalla en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxPared, Color.Brown);
     Raylib.DrawRectangleRec(hitboxShuriken, Raylib.ColorAlpha(Color.Red, 0.3f));
     Raylib.DrawRectangleRec(hitboxJugador, Raylib.ColorAlpha(Color.Blue, 0.3f));
-    // Dibujar Hibox en pantalla [Rectangulo, color] (Modo Debug)
     Raylib.DrawRectangleRec(hitboxEnemigo, Raylib.ColorAlpha(Color.Black, 0.3f));
 }
-void GestionDebugMode()
+void GestionarDebugMode()
 {
     // Finalizar el dibujo del Canvas 
     if (Raylib.IsKeyDown(KeyboardKey.F12))
