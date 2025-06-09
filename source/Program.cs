@@ -50,6 +50,8 @@ int anchoPared = 10;
 Music musicaFondo;
 Sound sonidoColision;
 Sound sonidoDisparo;
+float volumenMusica  = 0.8f;
+float volumenSonidos = 1f;
 // =========== Colisiones ===== //
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
@@ -100,6 +102,9 @@ Raylib.InitAudioDevice();
 musicaFondo = Raylib.LoadMusicStream("sonidos/Dungeon.ogg");
 sonidoColision = Raylib.LoadSound("sonidos/Hit.ogg");
 sonidoDisparo = Raylib.LoadSound("sonidos/Shoot.ogg");
+Raylib.SetMusicVolume(musicaFondo, volumenMusica);
+Raylib.SetSoundVolume(sonidoDisparo, volumenSonidos);
+Raylib.SetSoundVolume(sonidoColision, volumenMusica);
 Raylib.PlayMusicStream(musicaFondo);
 #endregion
 #region ==== GAME LOOP ====
@@ -132,6 +137,9 @@ while (!Raylib.WindowShouldClose())
 }
 // Descargar Musica
 Raylib.UnloadMusicStream(musicaFondo);
+// Descargar Sonidos
+Raylib.UnloadSound(sonidoColision);
+Raylib.UnloadSound(sonidoDisparo);
 // Cerrar dispositivo de audio
 Raylib.CloseAudioDevice();
 // Cerrar ventana
@@ -174,6 +182,8 @@ void DispararShuriken()
     // Si el jugador presiona la tecla F y aún no disparó Shuriken
     if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken)
     {
+        //Disparar Efecto de Sonido
+        Raylib.PlaySound(sonidoDisparo);
         //Asignar a la shuriken la posicion de origen en X
         posicionShuriken.X = origenShurikenX;
         //Calcula de la posicion en Y luego de moverse y segun la altura del personaje
@@ -286,6 +296,7 @@ void GestionarColisiones()
     {
         activoShuriken = false;
         posicionShuriken.X = origenShurikenX;
+        Raylib.PlaySound(sonidoColision);
     }
 
     if (collisionShurikenEnemigo)
@@ -293,13 +304,15 @@ void GestionarColisiones()
         activoShuriken = false;
         posicionShuriken.X = origenShurikenX;
         activoEnemigo = false;
+        Raylib.PlaySound(sonidoColision);
     }
-    
+
     if (collisionDisparoJugador)
     {
         activoJugador = false;
         activoDisparo = false;
         tiempoEsperaDisparo = 0;
+        Raylib.PlaySound(sonidoColision);
     }
 }
 void DibujarObjetos()
