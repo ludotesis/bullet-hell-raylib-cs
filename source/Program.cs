@@ -100,10 +100,14 @@ Raylib.InitAudioDevice();
 musicaFondo = Raylib.LoadMusicStream("sonidos/Dungeon.ogg");
 sonidoColision = Raylib.LoadSound("sonidos/Hit.ogg");
 sonidoDisparo = Raylib.LoadSound("sonidos/Shoot.ogg");
+Raylib.PlayMusicStream(musicaFondo);
 #endregion
 #region ==== GAME LOOP ====
 while (!Raylib.WindowShouldClose())
 {
+    //========= MUSICA ======
+    Raylib.UpdateMusicStream(musicaFondo);
+    //========= TEMPORIZADORES ======
     ActualizarTemporizadores();
     //========= MOVIMIENTO =========
     MoverJugador();
@@ -120,12 +124,16 @@ while (!Raylib.WindowShouldClose())
     AnimarEnemigo();
     //========= DIBUJAR =========
     Raylib.BeginDrawing();
-        Raylib.ClearBackground(Color.Beige);
-        DibujarTexto();
-        DibujarObjetos();
-        GestionarDebugMode();
+    Raylib.ClearBackground(Color.Beige);
+    DibujarTexto();
+    DibujarObjetos();
+    GestionarDebugMode();
     Raylib.EndDrawing();
 }
+// Descargar Musica
+Raylib.UnloadMusicStream(musicaFondo);
+// Cerrar dispositivo de audio
+Raylib.CloseAudioDevice();
 // Cerrar ventana
 Raylib.CloseWindow();
 #endregion
