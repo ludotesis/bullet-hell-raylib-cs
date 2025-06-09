@@ -24,7 +24,6 @@ Vector2 posicionEnemigo ;
 float velocidadEnemigo = 150f;
 int dificultad = 3;
 velocidadEnemigo = velocidadEnemigo * dificultad;
-Texture2D spriteEnemigo;
 bool activoEnemigo = true;
 bool upEnemigo = true;
 Rectangle hitboxEnemigo;
@@ -64,9 +63,6 @@ spriteShuriken.Width  *= ESCALA_ITEMS;
 spriteShuriken.Height *= ESCALA_ITEMS;
 spriteJugador.Width  *= ESCALA_ACTORES;
 spriteJugador.Height *= ESCALA_ACTORES;
-spriteEnemigo.Width  *= ESCALA_ACTORES;
-spriteEnemigo.Height *= ESCALA_ACTORES;
-//Escalar Spritesheet
 enemigoAnimamacionReposo.Width *= ESCALA_ACTORES;
 enemigoAnimamacionReposo.Height *= ESCALA_ACTORES;
 //Definir rectángulo segun escala de spritesheet
@@ -77,13 +73,13 @@ RectanguloAnimacion = new Rectangle(
                       enemigoAnimamacionReposo.Height/ cantidadFrames);
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
-posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
+posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (RectanguloAnimacion.Width * 2f), posicionJugador.Y);
 posicionDisparo = new Vector2(posicionEnemigo.X, posicionEnemigo.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
 hitboxJugador = new Rectangle(posicionJugador.X, posicionJugador.Y, spriteJugador.Width, spriteJugador.Height);
-hitboxEnemigo = new Rectangle(posicionEnemigo.X, posicionEnemigo.Y, spriteEnemigo.Width, spriteEnemigo.Height);
+hitboxEnemigo = new Rectangle(posicionEnemigo.X, posicionEnemigo.Y, RectanguloAnimacion.Width, RectanguloAnimacion.Height);
 // Configuracion de limite superior 
 float limiteUp = 0;
 // Calculo de limite inferior segun la altura del jugador
@@ -215,7 +211,7 @@ void DispararEnemigo()
         // Posicion Disparo en X segun Posicion Enemigo
         posicionDisparo.X = posicionEnemigo.X - 50f;
         // Posicion Disparo en Y segun Posicion Enemigo
-        posicionDisparo.Y = posicionEnemigo.Y + (spriteEnemigo.Height * 0.4f);
+        posicionDisparo.Y = posicionEnemigo.Y + (RectanguloAnimacion.Height * 0.4f);
     }
 }
 void AnimarEnemigo()
@@ -304,7 +300,6 @@ void CargarTexturas()
 {
     spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
     spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
-    spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
     enemigoAnimamacionReposo = Raylib.LoadTexture("sprites/Enemigo/Walk.png");
 }
 void DibujarHitboxs()
