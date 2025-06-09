@@ -46,6 +46,11 @@ float tiempoEsperaDisparo = 0;
 Vector2 posicionPared;
 Rectangle hitboxPared;
 int anchoPared = 10;
+// =========== Sonido ===== //
+Music musicaFondo;
+Sound sonidoColision;
+Sound sonidoDisparo;
+// =========== Colisiones ===== //
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
 bool collisionShurikenEnemigo = false;
