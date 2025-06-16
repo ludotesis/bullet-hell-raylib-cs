@@ -1,4 +1,5 @@
-﻿// Importar Raylib 
+﻿/*
+// Importar Raylib 
 using Raylib_cs;
 using System.Numerics;
 // =========== Constantes ===== //
@@ -360,3 +361,33 @@ void GestionarDebugMode()
     }
 }
 #endregion
+*/
+
+
+using Raylib_cs;
+
+class Program
+{
+    public static void Main()
+    {
+        
+        Jugador nuevoJugador = new Jugador();
+
+        Raylib.InitWindow(800, 480, "Hello World");
+
+        while (!Raylib.WindowShouldClose())
+        {
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.White);
+            nuevoJugador.Saludar();
+            Raylib.EndDrawing();
+        }
+
+        Raylib.CloseWindow();
+    }
+}
+
+
+
+
+
