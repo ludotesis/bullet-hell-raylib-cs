@@ -371,15 +371,20 @@ class Program
     public static void Main()
     {
         
-        Jugador nuevoJugador = new Jugador();
+        Jugador nuevoJugador = new Jugador(50, 50);
+        Enemigo enemigo1 = new Enemigo();
 
         Raylib.InitWindow(800, 480, "Hello World");
+
+        nuevoJugador.CargarSprite();
+        enemigo1.CargarSprite();
 
         while (!Raylib.WindowShouldClose())
         {
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.White);
-            nuevoJugador.Saludar();
+                Raylib.ClearBackground(Color.White);
+                nuevoJugador.DibujarSprite();
+                enemigo1.DibujarSprite();
             Raylib.EndDrawing();
         }
 

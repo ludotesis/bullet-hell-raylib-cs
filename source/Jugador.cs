@@ -1,9 +1,27 @@
 using Raylib_cs;
+using System.Numerics;
 
 class Jugador
 {
-    public void Saludar()
+    Texture2D sprite;
+    Vector2 posicion;
+
+    public Jugador(float posicionInicialX, float posicionInicialY)
     {
-        Raylib.DrawText("Hola, soy Jugador!", 12, 12, 20, Color.Black);
+        posicion.X = posicionInicialX;
+        posicion.Y = posicionInicialY;
+    }
+
+    public void CargarSprite()
+    {
+        sprite = Raylib.LoadTexture("sprites/Jugador.png");
+    }
+    
+    public void DibujarSprite()
+    {
+        Raylib.DrawTextureV(sprite, posicion, Color.White);
     }
 }
+
+
+
