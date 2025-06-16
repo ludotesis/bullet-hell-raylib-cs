@@ -24,7 +24,6 @@ Vector2 posicionEnemigo ;
 float velocidadEnemigo = 150f;
 int dificultad = 3;
 velocidadEnemigo = velocidadEnemigo * dificultad;
-Texture2D spriteEnemigo;
 bool activoEnemigo = true;
 bool upEnemigo = true;
 Rectangle hitboxEnemigo;
@@ -47,6 +46,13 @@ float tiempoEsperaDisparo = 0;
 Vector2 posicionPared;
 Rectangle hitboxPared;
 int anchoPared = 10;
+// =========== Sonido ===== //
+Music musicaFondo;
+Sound sonidoColision;
+Sound sonidoDisparo;
+float volumenMusica  = 0.8f;
+float volumenSonidos = 1f;
+// =========== Colisiones ===== //
 // =========== Colisiones ===== //
 bool collisionShurikenMapa = false;
 bool collisionShurikenEnemigo = false;
@@ -64,9 +70,6 @@ spriteShuriken.Width  *= ESCALA_ITEMS;
 spriteShuriken.Height *= ESCALA_ITEMS;
 spriteJugador.Width  *= ESCALA_ACTORES;
 spriteJugador.Height *= ESCALA_ACTORES;
-spriteEnemigo.Width  *= ESCALA_ACTORES;
-spriteEnemigo.Height *= ESCALA_ACTORES;
-//Escalar Spritesheet
 enemigoAnimamacionReposo.Width *= ESCALA_ACTORES;
 enemigoAnimamacionReposo.Height *= ESCALA_ACTORES;
 //Definir rectángulo segun escala de spritesheet
@@ -77,13 +80,13 @@ RectanguloAnimacion = new Rectangle(
                       enemigoAnimamacionReposo.Height/ cantidadFrames);
 //=========== Generar Posiciones ===== //
 posicionPared = new Vector2(Raylib.GetScreenWidth() - anchoPared, 0);
-posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (spriteEnemigo.Width * 2f), posicionJugador.Y);
+posicionEnemigo = new Vector2(Raylib.GetScreenWidth() - (RectanguloAnimacion.Width * 2f), posicionJugador.Y);
 posicionDisparo = new Vector2(posicionEnemigo.X, posicionEnemigo.Y);
 //=========== Generar Hiboxes ===== //
 hitboxShuriken = new Rectangle(posicionShuriken.X, posicionShuriken.Y, spriteShuriken.Width, spriteShuriken.Height);
 hitboxPared = new Rectangle(posicionPared.X, posicionPared.Y, anchoPared, Raylib.GetScreenHeight());
 hitboxJugador = new Rectangle(posicionJugador.X, posicionJugador.Y, spriteJugador.Width, spriteJugador.Height);
-hitboxEnemigo = new Rectangle(posicionEnemigo.X, posicionEnemigo.Y, spriteEnemigo.Width, spriteEnemigo.Height);
+hitboxEnemigo = new Rectangle(posicionEnemigo.X, posicionEnemigo.Y, RectanguloAnimacion.Width, RectanguloAnimacion.Height);
 // Configuracion de limite superior 
 float limiteUp = 0;
 // Calculo de limite inferior segun la altura del jugador
@@ -94,9 +97,22 @@ float origenShurikenX = posicionJugador.X + spriteJugador.Width;
 float tiempoEntreFrame = duracionAnimacion / velocidadAnimacion;
 int columnaAnimacionY = 2;
 #endregion
+#region ==== AUDIO ====
+Raylib.InitAudioDevice();
+musicaFondo = Raylib.LoadMusicStream("sonidos/Dungeon.ogg");
+sonidoColision = Raylib.LoadSound("sonidos/Hit.ogg");
+sonidoDisparo = Raylib.LoadSound("sonidos/Shoot.ogg");
+Raylib.SetMusicVolume(musicaFondo, volumenMusica);
+Raylib.SetSoundVolume(sonidoDisparo, volumenSonidos);
+Raylib.SetSoundVolume(sonidoColision, volumenMusica);
+Raylib.PlayMusicStream(musicaFondo);
+#endregion
 #region ==== GAME LOOP ====
 while (!Raylib.WindowShouldClose())
 {
+    //========= MUSICA ======
+    Raylib.UpdateMusicStream(musicaFondo);
+    //========= TEMPORIZADORES ======
     ActualizarTemporizadores();
     //========= MOVIMIENTO =========
     MoverJugador();
@@ -113,12 +129,19 @@ while (!Raylib.WindowShouldClose())
     AnimarEnemigo();
     //========= DIBUJAR =========
     Raylib.BeginDrawing();
-        Raylib.ClearBackground(Color.Beige);
-        DibujarTexto();
-        DibujarObjetos();
-        GestionarDebugMode();
+    Raylib.ClearBackground(Color.Beige);
+    DibujarTexto();
+    DibujarObjetos();
+    GestionarDebugMode();
     Raylib.EndDrawing();
 }
+// Descargar Musica
+Raylib.UnloadMusicStream(musicaFondo);
+// Descargar Sonidos
+Raylib.UnloadSound(sonidoColision);
+Raylib.UnloadSound(sonidoDisparo);
+// Cerrar dispositivo de audio
+Raylib.CloseAudioDevice();
 // Cerrar ventana
 Raylib.CloseWindow();
 #endregion
@@ -159,6 +182,8 @@ void DispararShuriken()
     // Si el jugador presiona la tecla F y aún no disparó Shuriken
     if (Raylib.IsKeyPressed(KeyboardKey.F) && !activoShuriken)
     {
+        //Disparar Efecto de Sonido
+        Raylib.PlaySound(sonidoDisparo);
         //Asignar a la shuriken la posicion de origen en X
         posicionShuriken.X = origenShurikenX;
         //Calcula de la posicion en Y luego de moverse y segun la altura del personaje
@@ -215,7 +240,7 @@ void DispararEnemigo()
         // Posicion Disparo en X segun Posicion Enemigo
         posicionDisparo.X = posicionEnemigo.X - 50f;
         // Posicion Disparo en Y segun Posicion Enemigo
-        posicionDisparo.Y = posicionEnemigo.Y + (spriteEnemigo.Height * 0.4f);
+        posicionDisparo.Y = posicionEnemigo.Y + (RectanguloAnimacion.Height * 0.4f);
     }
 }
 void AnimarEnemigo()
@@ -271,6 +296,7 @@ void GestionarColisiones()
     {
         activoShuriken = false;
         posicionShuriken.X = origenShurikenX;
+        Raylib.PlaySound(sonidoColision);
     }
 
     if (collisionShurikenEnemigo)
@@ -278,13 +304,15 @@ void GestionarColisiones()
         activoShuriken = false;
         posicionShuriken.X = origenShurikenX;
         activoEnemigo = false;
+        Raylib.PlaySound(sonidoColision);
     }
-    
+
     if (collisionDisparoJugador)
     {
         activoJugador = false;
         activoDisparo = false;
         tiempoEsperaDisparo = 0;
+        Raylib.PlaySound(sonidoColision);
     }
 }
 void DibujarObjetos()
@@ -304,7 +332,6 @@ void CargarTexturas()
 {
     spriteShuriken = Raylib.LoadTexture("sprites/Shuriken.png");
     spriteJugador = Raylib.LoadTexture("sprites/Jugador.png");
-    spriteEnemigo = Raylib.LoadTexture("sprites/Enemigo.png");
     enemigoAnimamacionReposo = Raylib.LoadTexture("sprites/Enemigo/Walk.png");
 }
 void DibujarHitboxs()
