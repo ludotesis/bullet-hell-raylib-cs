@@ -363,16 +363,15 @@ void GestionarDebugMode()
 #endregion
 */
 
-
 using Raylib_cs;
 
 class Program
 {
     public static void Main()
     {
-        
-        Jugador nuevoJugador = new Jugador(50, 50);
-        Enemigo enemigo1 = new Enemigo();
+
+        Jugador nuevoJugador = new Jugador(50f, 50f);
+        Enemigo enemigo1 = new Enemigo(50,45);
 
         Raylib.InitWindow(800, 480, "Hello World");
 
@@ -381,16 +380,23 @@ class Program
 
         while (!Raylib.WindowShouldClose())
         {
+            if (nuevoJugador.IsCollisionJugador(enemigo1.hitboxEnemigo))
+            {
+             Console.WriteLine("Colisión Jugador Enemigo");
+            }
+
             Raylib.BeginDrawing();
-                Raylib.ClearBackground(Color.White);
-                nuevoJugador.DibujarSprite();
-                enemigo1.DibujarSprite();
+            Raylib.ClearBackground(Color.White);
+            nuevoJugador.DibujarSprite();
+            enemigo1.DibujarSprite();
             Raylib.EndDrawing();
         }
 
         Raylib.CloseWindow();
     }
 }
+
+
 
 
 
