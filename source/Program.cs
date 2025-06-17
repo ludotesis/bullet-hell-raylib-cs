@@ -373,7 +373,7 @@ class Program
         Jugador nuevoJugador = new Jugador(50f, 50f);
         Enemigo enemigo1 = new Enemigo(50,45);
 
-        Raylib.InitWindow(800, 480, "Hello World");
+        Raylib.InitWindow(320, 180, "Hello World");
 
         nuevoJugador.CargarSprite();
         enemigo1.CargarSprite();
