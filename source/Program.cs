@@ -485,6 +485,35 @@ class Program
                 enemigo4.Reiniciar();
             }
 
+            if (shuriken.IsCollisionProyectil(enemigo1.hitbox))
+            {
+                enemigo1.Reiniciar();
+            }
+
+            if (shuriken.IsCollisionProyectil(enemigo1.hitbox))
+            {
+                shuriken.Reiniciar();
+                enemigo1.Reiniciar();
+            }
+
+            if (shuriken.IsCollisionProyectil(enemigo2.hitbox))
+            {
+                shuriken.Reiniciar();
+                enemigo2.Reiniciar();
+            }
+
+            if (shuriken.IsCollisionProyectil(enemigo3.hitbox))
+            {
+                shuriken.Reiniciar();
+                enemigo3.Reiniciar();
+            }            
+
+            if (shuriken.IsCollisionProyectil(enemigo4.hitbox))
+            {
+                shuriken.Reiniciar();
+                enemigo4.Reiniciar();
+            }
+
             Raylib.BeginDrawing();
                 Raylib.BeginMode2D(camera);
 

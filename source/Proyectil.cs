@@ -31,7 +31,11 @@ class Proyectil
 
     public bool IsCollisionProyectil(Rectangle otroHitbox)
     {
-        return Raylib.CheckCollisionRecs(hitbox, otroHitbox);
+        if (activo)
+        {
+          return Raylib.CheckCollisionRecs(hitbox, otroHitbox);  
+        } 
+        return false;
     }
 
     public void DibujarSprite()
