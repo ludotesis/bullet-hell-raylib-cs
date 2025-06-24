@@ -372,7 +372,10 @@ class Program
         // Crea un nuevo jugador en la posición (50, 50)
         Jugador jugador = new Jugador(50f, 50f);
         // Crea un enemigo en la posición (50, 45)
-        Enemigo enemigo1 = new Enemigo(50, 45);
+        Enemigo enemigo1 = new Enemigo(300, 10);
+        Enemigo enemigo2 = new Enemigo(300, 60);
+        Enemigo enemigo3 = new Enemigo(300, 110);
+        Enemigo enemigo4 = new Enemigo(300, 160);
         // Define el tamaño base lógico (resolución virtual del juego)
         int anchoVentana = 320;
         int altoVentana = 180;
@@ -399,6 +402,9 @@ class Program
         // Carga los sprites del jugador y del enemigo
         jugador.CargarSprite();
         enemigo1.CargarSprite();
+        enemigo2.CargarSprite();
+        enemigo3.CargarSprite();
+        enemigo4.CargarSprite();
         // Bucle principal del juego
         while (!Raylib.WindowShouldClose())
         {
@@ -413,31 +419,55 @@ class Program
                 jugador.MoverVertical(false, deltaTime);
             }
 
-            enemigo1.MoverHorizontal(false, deltaTime);
+            enemigo1.MoverHorizontal(true, deltaTime);
+            enemigo2.MoverHorizontal(true, deltaTime);
+            enemigo3.MoverHorizontal(true, deltaTime);
+            enemigo4.MoverHorizontal(true, deltaTime);
+
+            if (jugador.IsCollisionJugador(enemigo1.hitbox))
+            {
+                enemigo1.Reiniciar();
+            }
+
+            if (jugador.IsCollisionJugador(enemigo2.hitbox))
+            {
+                enemigo2.Reiniciar();
+            }
+
+            if (jugador.IsCollisionJugador(enemigo3.hitbox))
+            {
+                enemigo3.Reiniciar();
+            }
+
+            if (jugador.IsCollisionJugador(enemigo4.hitbox))
+            {
+                enemigo4.Reiniciar();
+            }
             // Comienza a dibujar el frame
             Raylib.BeginDrawing();
             // Limpia el fondo con color blanco
             Raylib.ClearBackground(Color.White);
             // Comienza el modo de cámara 2D
-                Raylib.BeginMode2D(camera);
-                    #region ===== DIBUJAR EN CAMARA ====
-                        // Dibuja un fondo azul oscuro
-                        Raylib.DrawRectangle(0, 0, 320, 180, Color.DarkBlue);
-                        // Dibuja un texto para probar el dibujo en cámara
-                        Raylib.DrawText("Dibujando en la Camara "+zoom, 10, 10, 10, Color.White);
-                        // Dibuja el sprite del jugador
-                        jugador.DibujarSprite();
-                        // Dibuja el sprite del enemigo
-                        enemigo1.DibujarSprite();
-                        Raylib.DrawFPS(10, 150);
-                        // Dibuja el hitbox del jugador con color azul semitransparente
+            Raylib.BeginMode2D(camera);
+            #region ===== DIBUJAR EN CAMARA ====
+            // Dibuja un fondo azul oscuro
+            Raylib.DrawRectangle(0, 0, 320, 180, Color.DarkBlue);
+            // Dibuja el sprite del jugador
+            jugador.DibujarSprite();
+            // Dibuja el sprite del enemigo
+            enemigo1.DibujarSprite();
+            enemigo2.DibujarSprite();
+            enemigo3.DibujarSprite();
+            enemigo4.DibujarSprite();
+            //Raylib.DrawFPS(10, 150);
+            // Dibuja el hitbox del jugador con color azul semitransparente
             Raylib.DrawRectangleRec(jugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
-                        // Dibuja el hitbox del enemigo con color rojo semitransparente
-                        Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
-                        
-                    #endregion
-                // Finaliza el modo de cámara
-                Raylib.EndMode2D();
+            // Dibuja el hitbox del enemigo con color rojo semitransparente
+            Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+
+            #endregion
+            // Finaliza el modo de cámara
+            Raylib.EndMode2D();
             // Finaliza el dibujo del frame
             Raylib.EndDrawing();
         }

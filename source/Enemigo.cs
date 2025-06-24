@@ -7,7 +7,8 @@ class Enemigo
     const int ALTO = 16;
 
     Texture2D sprite;
-    Vector2 posicion = new Vector2(50, 0);
+    Vector2 posicion;
+    Vector2 posicionInicial;
     public Rectangle hitbox;
 
     float velocidad = 50f;
@@ -17,6 +18,7 @@ class Enemigo
     {
         posicion.X = posicionInicialX;
         posicion.Y = posicionInicialY;
+        posicionInicial = posicion;
         hitbox = new Rectangle(posicion, ANCHO, ALTO);
     }
 
@@ -30,12 +32,12 @@ class Enemigo
     {
         Raylib.DrawTextureV(sprite, posicion, Color.White);
     }
-    
-     public void MoverHorizontal(bool haciaDerecha, float delta)
+
+    public void MoverHorizontal(bool haciaDerecha, float delta)
     {
         if (haciaDerecha)
         {
-            posicion.X -=  velocidad * delta;
+            posicion.X -= velocidad * delta;
         }
         else
         {
@@ -49,6 +51,11 @@ class Enemigo
     {
         hitbox.X = posicion.X;
         hitbox.Y = posicion.Y;
+    }
+
+    public void Reiniciar()
+    {
+        posicion = posicionInicial;
     }
 }
 
