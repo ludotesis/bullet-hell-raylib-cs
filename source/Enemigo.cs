@@ -6,9 +6,10 @@ class Enemigo
     const int ANCHO = 16;
     const int ALTO = 16;
 
-    Texture2D sprite;
+    //Texture2D sprite;
     Vector2 posicion;
     Vector2 posicionInicial;
+    Animacion animacion;
     public Rectangle hitbox;
 
     float velocidad = 50f;
@@ -19,17 +20,20 @@ class Enemigo
         posicion.Y = posicionInicialY;
         posicionInicial = posicion;
         hitbox = new Rectangle(posicion, ANCHO, ALTO);
+        animacion = new Animacion(1f, 6f, 4, 2, 0);
     }
 
     public void CargarSprite()
     {
-        sprite = Raylib.LoadTexture("sprites/Enemigo.png");
-        Raylib.SetTextureFilter(sprite, TextureFilter.Point);
+        //sprite = Raylib.LoadTexture("sprites/Enemigo.png");
+        //Raylib.SetTextureFilter(sprite, TextureFilter.Point);
+        animacion.CargarSpritesheet();
     }
 
     public void DibujarSprite()
     {
-        Raylib.DrawTextureV(sprite, posicion, Color.White);
+        //Raylib.DrawTextureV(sprite, posicion, Color.White);
+        animacion.DibujarFrame(posicion, Color.White);
     }
 
     public void MoverHorizontal(bool haciaDerecha, float delta)
@@ -44,6 +48,7 @@ class Enemigo
         }
 
         ActualizarHitbox();
+        animacion.Actualizar(delta);
     }
 
     void ActualizarHitbox()

@@ -29,8 +29,6 @@ class Proyectil
     {
         sprite = Raylib.LoadTexture(ruta);
         Raylib.SetTextureFilter(sprite, TextureFilter.Point);
-        sprite.Width = ANCHO;
-        sprite.Height = ALTO;
     }
 
     public bool IsCollisionProyectil(Rectangle otroHitbox)
@@ -46,7 +44,7 @@ class Proyectil
     {
         if (activo)
         {
-            Raylib.DrawTextureV(sprite, posicion, Color.White);
+            Raylib.DrawTextureEx(sprite, posicion, 0f, 0.5f, Color.White);
         }
     }
 
