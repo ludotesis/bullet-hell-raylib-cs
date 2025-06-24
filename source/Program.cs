@@ -60,7 +60,7 @@ bool collisionShurikenEnemigo = false;
 bool collisionDisparoJugador = false;
 // =========== Otros ===== //
 bool isDebugMode = false;
-float deltaTime = 0f;
+
 #endregion
 #region ==== CARGA DE JUEGO ====
 Raylib.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bullet Hell con Raylib");
@@ -151,7 +151,7 @@ Raylib.CloseWindow();
 void ActualizarTemporizadores()
 {
     // Obtener el tiempo en segundos para el último fotograma dibujado (tiempo delta)
-    deltaTime = Raylib.GetFrameTime();
+
     // Sumamos tiempo trascurrido al disparo
     tiempoEsperaDisparo += deltaTime;
     // Se acumula tiempo para determinar cuando cambiar el frame
@@ -370,7 +370,7 @@ class Program
     public static void Main()
     {
         // Crea un nuevo jugador en la posición (50, 50)
-        Jugador nuevoJugador = new Jugador(50f, 50f);
+        Jugador jugador = new Jugador(50f, 50f);
         // Crea un enemigo en la posición (50, 45)
         Enemigo enemigo1 = new Enemigo(50, 45);
         // Define el tamaño base lógico (resolución virtual del juego)
@@ -378,6 +378,7 @@ class Program
         int altoVentana = 180;
         // Inicializa la ventana con ese tamaño base
         Raylib.InitWindow(anchoVentana, altoVentana, "Camara2D y Zoom");
+        Raylib.SetTargetFPS(60);
         // Cambia la ventana a modo sin bordes (fullscreen simulado)
         Raylib.ToggleBorderlessWindowed();
         // Obtiene el tamaño real actual de la pantalla (después del cambio)
@@ -388,6 +389,7 @@ class Program
         float zoomAlto = pantallaAlto / (float)altoVentana;
         // Usa el menor zoom entero posible para que no se corte la imagen
         float zoom = MathF.Floor(MathF.Min(zoomAncho, zoomAlto));
+        float deltaTime = 0f;
         // Configura la cámara 2D
         Camera2D camera = new Camera2D();
         camera.Target = Vector2.Zero;   // El punto del mundo a centrar (origen en esquina)
@@ -395,11 +397,23 @@ class Program
         camera.Rotation = 0f;           // Sin rotación
         camera.Zoom = zoom;             // Zoom calculado
         // Carga los sprites del jugador y del enemigo
-        nuevoJugador.CargarSprite();
+        jugador.CargarSprite();
         enemigo1.CargarSprite();
         // Bucle principal del juego
         while (!Raylib.WindowShouldClose())
         {
+            deltaTime = Raylib.GetFrameTime();
+            if (Raylib.IsKeyDown(KeyboardKey.Up))
+            {
+                jugador.MoverVertical(true, deltaTime);
+            }
+            // Si el jugador presiona la tecla Down y no supera el limite inferior
+            if (Raylib.IsKeyDown(KeyboardKey.Down))
+            {
+                jugador.MoverVertical(false, deltaTime);
+            }
+
+            enemigo1.MoverHorizontal(false, deltaTime);
             // Comienza a dibujar el frame
             Raylib.BeginDrawing();
             // Limpia el fondo con color blanco
@@ -410,14 +424,14 @@ class Program
                         // Dibuja un fondo azul oscuro
                         Raylib.DrawRectangle(0, 0, 320, 180, Color.DarkBlue);
                         // Dibuja un texto para probar el dibujo en cámara
-                        Raylib.DrawText("Dibujando en la Camara", 10, 10, 10, Color.White);
+                        Raylib.DrawText("Dibujando en la Camara "+zoom, 10, 10, 10, Color.White);
                         // Dibuja el sprite del jugador
-                        nuevoJugador.DibujarSprite();
+                        jugador.DibujarSprite();
                         // Dibuja el sprite del enemigo
                         enemigo1.DibujarSprite();
-                   
+                        Raylib.DrawFPS(10, 150);
                         // Dibuja el hitbox del jugador con color azul semitransparente
-            Raylib.DrawRectangleRec(nuevoJugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
+            Raylib.DrawRectangleRec(jugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
                         // Dibuja el hitbox del enemigo con color rojo semitransparente
                         Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
                         

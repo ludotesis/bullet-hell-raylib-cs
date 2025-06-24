@@ -1,30 +1,54 @@
 using Raylib_cs;                        
-using System.Numerics;                 
+using System.Numerics;
 
-class Enemigo                          
+class Enemigo
 {
-    const int ANCHO  = 16;
+    const int ANCHO = 16;
     const int ALTO = 16;
 
-    Texture2D sprite;                  
-    Vector2 posicion = new Vector2(50, 0);  
-    public Rectangle hitbox;         
+    Texture2D sprite;
+    Vector2 posicion = new Vector2(50, 0);
+    public Rectangle hitbox;
+
+    float velocidad = 50f;
+    bool activo;
 
     public Enemigo(float posicionInicialX, float posicionInicialY)
     {
-        posicion.X = posicionInicialX;     
-        posicion.Y = posicionInicialY;     
-        hitbox = new Rectangle(posicion, ANCHO, ALTO); 
+        posicion.X = posicionInicialX;
+        posicion.Y = posicionInicialY;
+        hitbox = new Rectangle(posicion, ANCHO, ALTO);
     }
 
-    public void CargarSprite()           
+    public void CargarSprite()
     {
-        sprite = Raylib.LoadTexture("sprites/Enemigo.png"); 
+        sprite = Raylib.LoadTexture("sprites/Enemigo.png");
+        Raylib.SetTextureFilter(sprite, TextureFilter.Point);
+    }
+
+    public void DibujarSprite()
+    {
+        Raylib.DrawTextureV(sprite, posicion, Color.White);
     }
     
-    public void DibujarSprite()        
+     public void MoverHorizontal(bool haciaDerecha, float delta)
     {
-        Raylib.DrawTextureV(sprite, posicion, Color.White); 
+        if (haciaDerecha)
+        {
+            posicion.X -=  velocidad * delta;
+        }
+        else
+        {
+            posicion.X += velocidad * delta;
+        }
+
+        ActualizarHitbox();
+    }
+
+    void ActualizarHitbox()
+    {
+        hitbox.X = posicion.X;
+        hitbox.Y = posicion.Y;
     }
 }
 

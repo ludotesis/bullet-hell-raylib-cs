@@ -1,17 +1,17 @@
 using Raylib_cs;                  
-using System.Numerics;           
+using System.Numerics;
 
-class Jugador                    
+class Jugador
 {
 
-    const int ANCHO  = 16;
+    const int ANCHO = 16;
     const int ALTO = 16;
 
-    Texture2D sprite;           
-    Vector2 posicion;           
-    public Rectangle hitbox;           
-  
-    float velocidad = 500f;
+    Texture2D sprite;
+    Vector2 posicion;
+    public Rectangle hitbox;
+
+    float velocidad = 50f;
     bool activo;
 
     public Jugador(float posicionInicialX, float posicionInicialY)
@@ -22,19 +22,40 @@ class Jugador
         activo = true;
     }
 
-    public bool IsCollisionJugador(Rectangle otroHitbox) // Método para detectar colisiones
+    public bool IsCollisionJugador(Rectangle otroHitbox)
     {
-        return Raylib.CheckCollisionRecs(hitbox, otroHitbox); // Devuelve true si hay colisión
+        return Raylib.CheckCollisionRecs(hitbox, otroHitbox);
     }
 
-    public void CargarSprite()              // Método para cargar la imagen del jugador
+    public void CargarSprite()
     {
-        sprite = Raylib.LoadTexture("sprites/Jugador.png"); // Carga el sprite desde un archivo
+        sprite = Raylib.LoadTexture("sprites/Jugador.png");
+        Raylib.SetTextureFilter(sprite, TextureFilter.Point);
     }
 
-    public void DibujarSprite()            // Método para dibujar al jugador
+    public void DibujarSprite()
     {
-        Raylib.DrawTextureV(sprite, posicion, Color.White); // Dibuja el sprite en pantalla
+        Raylib.DrawTextureV(sprite, posicion, Color.White);
+    }
+
+    public void MoverVertical(bool haciaArriba, float delta)
+    {
+        if (haciaArriba)
+        {
+            posicion.Y -= velocidad * delta;
+        }
+        else
+        {
+            posicion.Y += velocidad * delta;
+        }
+
+        ActualizarHitbox();
+    }
+
+    void ActualizarHitbox()
+    {
+        hitbox.X = posicion.X;
+        hitbox.Y = posicion.Y;
     }
 }
 
