@@ -12,14 +12,12 @@ class Jugador
     public Rectangle hitbox;
 
     float velocidad = 50f;
-    bool activo;
 
     public Jugador(float posicionInicialX, float posicionInicialY)
     {
         posicion.X = posicionInicialX;
         posicion.Y = posicionInicialY;
         hitbox = new Rectangle(posicion, ANCHO, ALTO);
-        activo = true;
     }
 
     public bool IsCollisionJugador(Rectangle otroHitbox)
@@ -66,6 +64,11 @@ class Jugador
     public bool puedoMoverAbajo(float limiteAbajo)
     {
         return posicion.Y < (limiteAbajo - ALTO);
+    }
+
+    public Vector2 ObtenerPosicionJugador()
+    {
+        return posicion;
     }
 }
 

@@ -362,61 +362,71 @@ void GestionarDebugMode()
 }
 #endregion
 */
-using System.Numerics;              // Importa vectores como Vector2 para posiciones
-using Raylib_cs;                    // Importa la API de Raylib para C#
+using System.Numerics;
+using Raylib_cs;                    
 
 class Program
 {
     public static void Main()
     {
-        // Crea un nuevo jugador en la posición (50, 50)
         Jugador jugador = new Jugador(50f, 50f);
-        // Crea un enemigo en la posición (50, 45)
+        Proyectil shuriken = new Proyectil();
         Enemigo enemigo1 = new Enemigo(300, 10);
         Enemigo enemigo2 = new Enemigo(300, 60);
         Enemigo enemigo3 = new Enemigo(300, 110);
         Enemigo enemigo4 = new Enemigo(300, 160);
-        // Define el tamaño base lógico (resolución virtual del juego)
+
         int anchoVentana = 320;
         int altoVentana = 180;
-        // Inicializa la ventana con ese tamaño base
+        
         Raylib.InitWindow(anchoVentana, altoVentana, "Camara2D y Zoom");
-        Raylib.SetTargetFPS(60);
-        // Cambia la ventana a modo sin bordes (fullscreen simulado)
         Raylib.ToggleBorderlessWindowed();
-        // Obtiene el tamaño real actual de la pantalla (después del cambio)
         int pantallaAncho = Raylib.GetScreenWidth();
         int pantallaAlto = Raylib.GetScreenHeight();
-        // Calcula el zoom posible en cada eje (horizontal y vertical)
+
         float zoomAncho = pantallaAncho / (float)anchoVentana;
         float zoomAlto = pantallaAlto / (float)altoVentana;
-        // Usa el menor zoom entero posible para que no se corte la imagen
         float zoom = MathF.Floor(MathF.Min(zoomAncho, zoomAlto));
         float deltaTime = 0f;
-        // Configura la cámara 2D
+        
         Camera2D camera = new Camera2D();
-        camera.Target = Vector2.Zero;   // El punto del mundo a centrar (origen en esquina)
-        camera.Offset = Vector2.Zero;   // Offset en pantalla (0,0 = esquina superior izq)
-        camera.Rotation = 0f;           // Sin rotación
-        camera.Zoom = zoom;             // Zoom calculado
-        // Carga los sprites del jugador y del enemigo
+        camera.Target = Vector2.Zero;   
+        camera.Offset = Vector2.Zero;   
+        camera.Rotation = 0f;           
+        camera.Zoom = zoom;             
+        
         jugador.CargarSprite();
+        shuriken.CargarSprite("sprites/Shuriken.png");
         enemigo1.CargarSprite();
         enemigo2.CargarSprite();
         enemigo3.CargarSprite();
         enemigo4.CargarSprite();
-        // Bucle principal del juego
+        
         while (!Raylib.WindowShouldClose())
         {
             deltaTime = Raylib.GetFrameTime();
+
             if (Raylib.IsKeyDown(KeyboardKey.Up) && jugador.puedoMoverArriba(0))
             {
                 jugador.MoverVertical(true, deltaTime);
             }
-            // Si el jugador presiona la tecla Down y no supera el limite inferior
+
             if (Raylib.IsKeyDown(KeyboardKey.Down) && jugador.puedoMoverAbajo(altoVentana))
             {
                 jugador.MoverVertical(false, deltaTime);
+            }
+
+            if (Raylib.IsKeyPressed(KeyboardKey.F) && shuriken.puedoDisparar())
+            {
+                shuriken.Disparar(jugador.ObtenerPosicionJugador());
+            }
+
+            if (shuriken.puedoMoverDerecha(anchoVentana))
+            {
+                shuriken.MoverHorizontal(false, deltaTime);
+            }else
+            {
+                shuriken.Reiniciar();
             }
 
             if (enemigo1.puedoMoverIzquierda(0))
@@ -474,37 +484,31 @@ class Program
             {
                 enemigo4.Reiniciar();
             }
-            // Comienza a dibujar el frame
+
             Raylib.BeginDrawing();
-            // Limpia el fondo con color blanco
-            Raylib.ClearBackground(Color.White);
-            // Comienza el modo de cámara 2D
-            Raylib.BeginMode2D(camera);
-            #region ===== DIBUJAR EN CAMARA ====
-            // Dibuja un fondo azul oscuro
-            Raylib.DrawRectangle(0, 0, 320, 180, Color.DarkBlue);
-            // Dibuja el sprite del jugador
-            jugador.DibujarSprite();
-            // Dibuja el sprite del enemigo
-            enemigo1.DibujarSprite();
-            enemigo2.DibujarSprite();
-            enemigo3.DibujarSprite();
-            enemigo4.DibujarSprite();
-            //Raylib.DrawFPS(10, 150);
-            // Dibuja el hitbox del jugador con color azul semitransparente
-            Raylib.DrawRectangleRec(jugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
-            // Dibuja el hitbox del enemigo con color rojo semitransparente
-            Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
-            Raylib.DrawRectangleRec(enemigo2.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
-            Raylib.DrawRectangleRec(enemigo3.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
-            Raylib.DrawRectangleRec(enemigo4.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
-            #endregion
-            // Finaliza el modo de cámara
-            Raylib.EndMode2D();
-            // Finaliza el dibujo del frame
+                Raylib.BeginMode2D(camera);
+
+                Raylib.DrawRectangle(0, 0, 320, 180, Color.DarkBlue);
+
+                jugador.DibujarSprite();
+                shuriken.DibujarSprite();
+                enemigo1.DibujarSprite();
+                enemigo2.DibujarSprite();
+                enemigo3.DibujarSprite();
+                enemigo4.DibujarSprite();
+
+                Raylib.DrawRectangleRec(jugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
+                Raylib.DrawRectangleRec(shuriken.hitbox, Raylib.ColorAlpha(Color.Green, 0.5f));
+                Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+                Raylib.DrawRectangleRec(enemigo2.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+                Raylib.DrawRectangleRec(enemigo3.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+                Raylib.DrawRectangleRec(enemigo4.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+
+                //Raylib.DrawFPS(10, 150);
+                Raylib.EndMode2D();
             Raylib.EndDrawing();
         }
-        // Cierra la ventana y limpia recursos
+
         Raylib.CloseWindow();
     }
 }

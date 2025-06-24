@@ -12,7 +12,6 @@ class Enemigo
     public Rectangle hitbox;
 
     float velocidad = 50f;
-    bool activo;
 
     public Enemigo(float posicionInicialX, float posicionInicialY)
     {
