@@ -1,22 +1,30 @@
-using Raylib_cs;                  // Importa funciones de Raylib para gráficos y manejo de recursos
-using System.Numerics;           // Importa estructuras matemáticas como Vector2
+using Raylib_cs;                  
+using System.Numerics;           
 
-class Jugador                    // Declara una clase llamada Jugador
+class Jugador                    
 {
-    Texture2D sprite;           // Variable para almacenar la imagen del jugador
-    Vector2 posicion;           // Almacena la posición del jugador en la pantalla
-    Rectangle hitboxJugador;    // Rectángulo que representa el área de colisión
 
-    public Jugador(float posicionInicialX, float posicionInicialY) // Constructor: recibe coordenadas iniciales
+    const int ANCHO  = 16;
+    const int ALTO = 16;
+
+    Texture2D sprite;           
+    Vector2 posicion;           
+    public Rectangle hitbox;           
+  
+    float velocidad = 500f;
+    bool activo;
+
+    public Jugador(float posicionInicialX, float posicionInicialY)
     {
-        posicion.X = posicionInicialX;         // Asigna coordenada X
-        posicion.Y = posicionInicialY;         // Asigna coordenada Y
-        hitboxJugador = new Rectangle(posicion,16, 16); // Crea hitbox de 16x16 en esa posición
+        posicion.X = posicionInicialX;
+        posicion.Y = posicionInicialY;
+        hitbox = new Rectangle(posicion, ANCHO, ALTO);
+        activo = true;
     }
 
     public bool IsCollisionJugador(Rectangle otroHitbox) // Método para detectar colisiones
     {
-        return Raylib.CheckCollisionRecs(hitboxJugador, otroHitbox); // Devuelve true si hay colisión
+        return Raylib.CheckCollisionRecs(hitbox, otroHitbox); // Devuelve true si hay colisión
     }
 
     public void CargarSprite()              // Método para cargar la imagen del jugador

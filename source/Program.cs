@@ -362,43 +362,72 @@ void GestionarDebugMode()
 }
 #endregion
 */
-
-using Raylib_cs;
+using System.Numerics;              // Importa vectores como Vector2 para posiciones
+using Raylib_cs;                    // Importa la API de Raylib para C#
 
 class Program
 {
     public static void Main()
     {
-
+        // Crea un nuevo jugador en la posición (50, 50)
         Jugador nuevoJugador = new Jugador(50f, 50f);
-        Enemigo enemigo1 = new Enemigo(50,45);
-
-        Raylib.InitWindow(320, 180, "Hello World");
-
+        // Crea un enemigo en la posición (50, 45)
+        Enemigo enemigo1 = new Enemigo(50, 45);
+        // Define el tamaño base lógico (resolución virtual del juego)
+        int anchoVentana = 320;
+        int altoVentana = 180;
+        // Inicializa la ventana con ese tamaño base
+        Raylib.InitWindow(anchoVentana, altoVentana, "Camara2D y Zoom");
+        // Cambia la ventana a modo sin bordes (fullscreen simulado)
+        Raylib.ToggleBorderlessWindowed();
+        // Obtiene el tamaño real actual de la pantalla (después del cambio)
+        int pantallaAncho = Raylib.GetScreenWidth();
+        int pantallaAlto = Raylib.GetScreenHeight();
+        // Calcula el zoom posible en cada eje (horizontal y vertical)
+        float zoomAncho = pantallaAncho / (float)anchoVentana;
+        float zoomAlto = pantallaAlto / (float)altoVentana;
+        // Usa el menor zoom entero posible para que no se corte la imagen
+        float zoom = MathF.Floor(MathF.Min(zoomAncho, zoomAlto));
+        // Configura la cámara 2D
+        Camera2D camera = new Camera2D();
+        camera.Target = Vector2.Zero;   // El punto del mundo a centrar (origen en esquina)
+        camera.Offset = Vector2.Zero;   // Offset en pantalla (0,0 = esquina superior izq)
+        camera.Rotation = 0f;           // Sin rotación
+        camera.Zoom = zoom;             // Zoom calculado
+        // Carga los sprites del jugador y del enemigo
         nuevoJugador.CargarSprite();
         enemigo1.CargarSprite();
-
+        // Bucle principal del juego
         while (!Raylib.WindowShouldClose())
         {
-            if (nuevoJugador.IsCollisionJugador(enemigo1.hitboxEnemigo))
-            {
-             Console.WriteLine("Colisión Jugador Enemigo");
-            }
-
+            // Comienza a dibujar el frame
             Raylib.BeginDrawing();
+            // Limpia el fondo con color blanco
             Raylib.ClearBackground(Color.White);
-            nuevoJugador.DibujarSprite();
-            enemigo1.DibujarSprite();
+            // Comienza el modo de cámara 2D
+                Raylib.BeginMode2D(camera);
+                    #region ===== DIBUJAR EN CAMARA ====
+                        // Dibuja un fondo azul oscuro
+                        Raylib.DrawRectangle(0, 0, 320, 180, Color.DarkBlue);
+                        // Dibuja un texto para probar el dibujo en cámara
+                        Raylib.DrawText("Dibujando en la Camara", 10, 10, 10, Color.White);
+                        // Dibuja el sprite del jugador
+                        nuevoJugador.DibujarSprite();
+                        // Dibuja el sprite del enemigo
+                        enemigo1.DibujarSprite();
+                   
+                        // Dibuja el hitbox del jugador con color azul semitransparente
+            Raylib.DrawRectangleRec(nuevoJugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
+                        // Dibuja el hitbox del enemigo con color rojo semitransparente
+                        Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+                        
+                    #endregion
+                // Finaliza el modo de cámara
+                Raylib.EndMode2D();
+            // Finaliza el dibujo del frame
             Raylib.EndDrawing();
         }
-
+        // Cierra la ventana y limpia recursos
         Raylib.CloseWindow();
     }
 }
-
-
-
-
-
-
-
