@@ -12,8 +12,12 @@ class Proyectil
     public Rectangle hitbox;
 
     float velocidad = 100f;
-    Vector2 margenOrigen = new Vector2(ANCHO, ALTO/2);
+    Vector2 margenOrigen = new Vector2(ANCHO, ALTO / 2);
     bool activo;
+
+    Sound sonidoColision;
+    Sound sonidoDisparo;
+    float volumen = 1f;
 
     public Proyectil()
     {
@@ -33,8 +37,8 @@ class Proyectil
     {
         if (activo)
         {
-          return Raylib.CheckCollisionRecs(hitbox, otroHitbox);  
-        } 
+            return Raylib.CheckCollisionRecs(hitbox, otroHitbox);
+        }
         return false;
     }
 
@@ -44,7 +48,6 @@ class Proyectil
         {
             Raylib.DrawTextureV(sprite, posicion, Color.White);
         }
-
     }
 
     public void MoverHorizontal(bool haciaDerecha, float delta)
@@ -83,10 +86,40 @@ class Proyectil
         posicion = origenDisparo + margenOrigen;
         activo = true;
     }
-    
-     public void Reiniciar()
+
+    public void Reiniciar()
     {
         activo = false;
+    }
+
+    public void InicializarSFX()
+    {
+        sonidoColision = Raylib.LoadSound("sonidos/Hit.ogg");
+        sonidoDisparo = Raylib.LoadSound("sonidos/Shoot.ogg");
+        Raylib.SetSoundVolume(sonidoDisparo, volumen);
+        Raylib.SetSoundVolume(sonidoColision, volumen);
+    }
+
+    public void DisparoSFX()
+    {
+        if (!Raylib.IsSoundPlaying(sonidoDisparo))
+        {
+            Raylib.PlaySound(sonidoDisparo);
+        }
+    }
+
+    public void HitSFX()
+    {
+        if (!Raylib.IsSoundPlaying(sonidoColision))
+        {
+            Raylib.PlaySound(sonidoColision);
+        }
+    }
+
+    public void DeInicializarSFX()
+    {
+        Raylib.UnloadSound(sonidoColision);
+        Raylib.UnloadSound(sonidoDisparo);
     }
  
 }
