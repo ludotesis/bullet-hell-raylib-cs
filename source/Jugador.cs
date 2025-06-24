@@ -57,6 +57,16 @@ class Jugador
         hitbox.X = posicion.X;
         hitbox.Y = posicion.Y;
     }
+
+    public bool puedoMoverArriba(float limiteArriba)
+    {
+        return posicion.Y > limiteArriba;
+    }
+
+    public bool puedoMoverAbajo(float limiteAbajo)
+    {
+        return posicion.Y < (limiteAbajo - ALTO);
+    }
 }
 
 

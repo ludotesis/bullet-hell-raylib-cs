@@ -57,6 +57,11 @@ class Enemigo
     {
         posicion = posicionInicial;
     }
+
+    public bool puedoMoverIzquierda(float limiteIzquierda)
+    {
+        return posicion.X > limiteIzquierda;
+    }
 }
 
 

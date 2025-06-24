@@ -409,20 +409,51 @@ class Program
         while (!Raylib.WindowShouldClose())
         {
             deltaTime = Raylib.GetFrameTime();
-            if (Raylib.IsKeyDown(KeyboardKey.Up))
+            if (Raylib.IsKeyDown(KeyboardKey.Up) && jugador.puedoMoverArriba(0))
             {
                 jugador.MoverVertical(true, deltaTime);
             }
             // Si el jugador presiona la tecla Down y no supera el limite inferior
-            if (Raylib.IsKeyDown(KeyboardKey.Down))
+            if (Raylib.IsKeyDown(KeyboardKey.Down) && jugador.puedoMoverAbajo(altoVentana))
             {
                 jugador.MoverVertical(false, deltaTime);
             }
 
-            enemigo1.MoverHorizontal(true, deltaTime);
-            enemigo2.MoverHorizontal(true, deltaTime);
-            enemigo3.MoverHorizontal(true, deltaTime);
-            enemigo4.MoverHorizontal(true, deltaTime);
+            if (enemigo1.puedoMoverIzquierda(0))
+            {
+                enemigo1.MoverHorizontal(true, deltaTime);
+            }
+            else
+            {
+                enemigo1.Reiniciar();
+            }
+
+            if (enemigo2.puedoMoverIzquierda(0))
+            {   
+                enemigo2.MoverHorizontal(true, deltaTime);
+            }
+            else
+            {
+                enemigo2.Reiniciar();
+            }
+
+            if (enemigo3.puedoMoverIzquierda(0))
+            {   
+                enemigo3.MoverHorizontal(true, deltaTime);
+            }
+            else
+            {
+                enemigo3.Reiniciar();
+            }
+
+            if (enemigo4.puedoMoverIzquierda(0))
+            {   
+                enemigo4.MoverHorizontal(true, deltaTime);
+            }
+            else
+            {
+                enemigo4.Reiniciar();
+            }
 
             if (jugador.IsCollisionJugador(enemigo1.hitbox))
             {
@@ -464,7 +495,9 @@ class Program
             Raylib.DrawRectangleRec(jugador.hitbox, Raylib.ColorAlpha(Color.Blue, 0.5f));
             // Dibuja el hitbox del enemigo con color rojo semitransparente
             Raylib.DrawRectangleRec(enemigo1.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
-
+            Raylib.DrawRectangleRec(enemigo2.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+            Raylib.DrawRectangleRec(enemigo3.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
+            Raylib.DrawRectangleRec(enemigo4.hitbox, Raylib.ColorAlpha(Color.Red, 0.5f));
             #endregion
             // Finaliza el modo de cámara
             Raylib.EndMode2D();
